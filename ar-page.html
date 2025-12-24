@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>AR校园导航</title>
+    <link href="css/global.css" rel="stylesheet"/>
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
+    <style>
+        .ar-controls {
+            position: fixed;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .ar-button {
+            background-color: rgba(74, 109, 229, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .location-info {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            text-align: center;
+        }
+
+        .location-card {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-size: 16px;
+            max-width: 300px;
+            margin: 0 auto;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+    </style>
+</head>
+<body style="margin: 0px; overflow: hidden;">
+    <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
+        <a-marker preset="hiro" id="main-marker">
+            <a-entity id="location-container" position="0 0.5 0" rotation="-90 0 0">
+                <a-text value="图书馆" color="#333" width="3" position="0 0.5 0" align="center"></a-text>
+                <a-box position="0 0 0" width="1.5" height="0.1" depth="1.5" color="#4a6de5"></a-box>
+                <a-cylinder position="0 0.5 0" radius="0.1" height="1" color="#ff5722"></a-cylinder>
+                <a-sphere position="0 1.2 0" radius="0.2" color="#ffc107"></a-sphere>
+            </a-entity>
+        </a-marker>
+
+        <a-marker preset="custom" type="pattern" url="assets/marker/pattern.patt" id="secondary-marker">
+            <a-entity id="direction-container" position="0 0.5 0">
+                <a-text value="教学楼方向" color="#333" width="3" position="0 0.5 0" align="center"></a-text>
+                <a-arrow position="0 0.3 0" rotation="-90 0 0" color="#34a853" length="1.5"></a-arrow>
+            </a-entity>
+        </a-marker>
+
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <div class="location-info">
+        <div class="location-card" id="location-card">
+            <p id="location-text">当前位置: 图书馆</p>
+            <p id="distance-text">距离教学楼: 200米</p>
+        </div>
+    </div>
+
+    <div class="ar-controls">
+        <button class="ar-button" id="voice-btn">语音导航</button>
+        <button class="ar-button" id="map-btn">显示地图</button>
+        <button class="ar-button" id="info-btn">详细信息</button>
+    </div>
+
+    <div class="ar-ui">
+        <div class="back-button">
+            <a href="index.html">返回首页</a>
+        </div>
+        <div class="ar-info">
+            <p>请将摄像头对准标记图</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mainMarker = document.querySelector('#main-marker');
+            const secondaryMarker = document.querySelector('#secondary-marker');
+            const locationCard = document.querySelector('#location-card');
+            const locationText = document.querySelector('#location-text');
+            const distanceText = document.querySelector('#distance-text');
+            const voiceBtn = document.querySelector('#voice-btn');
+            const mapBtn = document.querySelector('#map-btn');
+            const infoBtn = document.querySelector('#info-btn');
+
+            // 标记检测事件
+            mainMarker.addEventListener('markerFound', function() {
+                locationCard.style.display = 'block';
+                locationText.textContent = '当前位置: 图书馆';
+                distanceText.textContent = '距离教学楼: 200米';
+            });
+
+            mainMarker.addEventListener('markerLost', function() {
+                locationCard.style.display = 'none';
+            });
+
+            secondaryMarker.addEventListener('markerFound', function() {
+                locationCard.style.display = 'block';
+                locationText.textContent = '当前位置: 教学楼方向';
+                distanceText.textContent = '距离图书馆: 200米';
+            });
+
+            secondaryMarker.addEventListener('markerLost', function() {
+                locationCard.style.display = 'none';
+            });
+
+            // 按钮事件
+            voiceBtn.addEventListener('click', function() {
+                if ('speechSynthesis' in window) {
+                    const text = locationText.textContent + ', ' + distanceText.textContent;
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'zh-CN';
+                    speechSynthesis.speak(utterance);
+                } else {
+                    alert('您的浏览器不支持语音合成功能');
+                }
+            });
+
+            mapBtn.addEventListener('click', function() {
+                window.open('vr-page.html', '_blank');
+            });
+
+            infoBtn.addEventListener('click', function() {
+                const location = locationText.textContent.replace('当前位置: ', '');
+                let info = '';
+
+                if (location === '图书馆') {
+                    info = '图书馆开放时间: 8:00-22:00，馆藏图书50万册，提供自习室和电子阅览室。';
+                } else if (location === '教学楼方向') {
+                    info = '教学楼共有A、B、C三栋，配备多媒体教室、实验室和教师办公室。';
+                }
+
+                if (info) {
+                    alert(info);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

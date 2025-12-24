@@ -1,16 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-    <title></title>
-    <script src="js/mui.min.js"></script>
-    <link href="css/mui.min.css" rel="stylesheet"/>
-    <script type="text/javascript" charset="utf-8">
-      	mui.init();
-    </script>
+    <title>AR校园导览</title>
+    <link href="css/global.css" rel="stylesheet"/>
 </head>
 <body>
-	
+    <div class="container">
+        <header class="header">
+            <h1>AR校园导览系统</h1>
+            <p>探索校园的全新方式</p>
+        </header>
+
+        <main class="main-content">
+            <div class="feature-cards">
+                <a href="ar-page.html" class="feature-card">
+                    <div class="card-icon ar-icon"></div>
+                    <h2>AR导航</h2>
+                    <p>使用增强现实技术，在真实校园环境中查看导航信息</p>
+                </a>
+
+                <a href="vr-page.html" class="feature-card">
+                    <div class="card-icon vr-icon"></div>
+                    <h2>VR全景漫游</h2>
+                    <p>通过虚拟现实技术，360°全方位体验校园风光</p>
+                </a>
+            </div>
+
+            <div class="info-section">
+                <h3>使用说明</h3>
+                <ol>
+                    <li>AR导航需要打印标记图并放置在校园各处</li>
+                    <li>VR全景漫游需要支持WebGL的浏览器</li>
+                    <li>建议在WiFi环境下使用以节省流量</li>
+                </ol>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2023 AR校园导览系统</p>
+        </footer>
+    </div>
 </body>
 </html>
