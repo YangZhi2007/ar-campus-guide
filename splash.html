@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园导览APP - 启动页</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/splash.css">
+</head>
+<body class="light-theme">
+    <!-- 启动加载动画 -->
+    <div class="splash-loading" id="splashLoading">
+        <div class="loading-spinner"></div>
+        <p>应用加载中...</p>
+    </div>
+
+    <div class="splash-container" id="splashContainer" style="display: none;">
+        <div class="splash-slider" id="splashSlider">
+            <div class="splash-slide active">
+                <svg class="splash-img" width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="200" height="200" fill="#4A6DE5"/>
+                    <circle cx="100" cy="100" r="50" fill="#2196F3"/>
+                    <path d="M70 100 L130 100" stroke="white" stroke-width="5"/>
+                </svg>
+                <h2 class="splash-title">全景校园漫游</h2>
+                <p class="splash-desc">VR/AR双模式，沉浸式探索高校环境</p>
+            </div>
+            <div class="splash-slide">
+                <svg class="splash-img" width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="200" height="200" fill="#2196F3"/>
+                    <rect x="50" y="50" width="100" height="100" fill="#4A6DE5"/>
+                    <text x="100" y="115" font-family="Arial, sans-serif" font-size="24" fill="white" text-anchor="middle">学校</text>
+                </svg>
+                <h2 class="splash-title">全国学校分类</h2>
+                <p class="splash-desc">按地区/类型筛选，快速锁定目标院校</p>
+            </div>
+            <div class="splash-slide">
+                <svg class="splash-img" width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="200" height="200" fill="#FF9800"/>
+                    <circle cx="100" cy="100" r="50" fill="#4A6DE5"/>
+                    <path d="M70 100 L130 100" stroke="white" stroke-width="5"/>
+                </svg>
+                <h2 class="splash-title">问答交流社区</h2>
+                <p class="splash-desc">发布择校疑问，获取精准回复</p>
+            </div>
+        </div>
+        <div class="splash-dots" id="splashDots">
+            <span class="dot active"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+        <button class="splash-btn btn" id="splashBtn" style="display: none;">立即登录</button>
+    </div>
+
+    <script src="./js/jquery.min.js"></script>
+    <script>
+        // 模拟应用加载
+        setTimeout(() => {
+            $('#splashLoading').fadeOut();
+            $('#splashContainer').fadeIn();
+        }, 1500);
+
+        // 启动页轮播逻辑
+        let currentSlide = 0;
+        const slides = $('.splash-slide');
+        const dots = $('.dot');
+        const btn = $('#splashBtn');
+
+        // 初始化指示点
+        for (let i = 0; i < slides.length; i++) {
+            if (i === 0) continue;
+            $('#splashDots').append('<span class="dot"></span>');
+        }
+
+        // 滑动切换
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        $('.splash-container').on('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        $('.splash-container').on('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // 向左滑动
+                currentSlide = (currentSlide + 1) % slides.length;
+                updateSlide();
+            } else if (touchEndX > touchStartX + 50) {
+                // 向右滑动
+                currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+                updateSlide();
+            }
+        }
+
+        // 点击指示点切换
+        $('#splashDots').on('click', '.dot', function() {
+            currentSlide = $(this).index();
+            updateSlide();
+        });
+
+        function updateSlide() {
+            slides.removeClass('active').eq(currentSlide).addClass('active');
+            dots.removeClass('active').eq(currentSlide).addClass('active');
+
+            // 最后一页显示"立即登录"按钮
+            if (currentSlide === slides.length - 1) {
+                btn.fadeIn();
+            } else {
+                btn.fadeOut();
+            }
+        }
+
+        // 点击按钮跳转登录页
+        $('#splashBtn').click(function() {
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

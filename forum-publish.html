@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>发布问题 - 校园导览</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/forum.css">
+</head>
+<body class="light-theme">
+    <!-- 顶部导航栏 -->
+    <div class="header-nav" id="headerNav">
+        <div class="header-left">
+            <button class="back-btn" onclick="window.history.back()">
+                <svg class="back-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="#4A6DE5"/>
+                </svg>
+            </button>
+            <h1 class="logo-text">发布问题</h1>
+        </div>
+        <div class="header-right">
+            <button class="theme-btn" id="themeBtn">
+                <svg class="theme-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="5" fill="#4A6DE5"/>
+                    <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="#4A6DE5" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- 页面内容 -->
+    <div class="page-content">
+        <div class="publish-container">
+            <form id="publishForm" class="publish-form">
+                <div class="form-group">
+                    <label class="form-label" for="questionTitle">问题标题</label>
+                    <input type="text" id="questionTitle" class="form-input" placeholder="请输入问题标题" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="questionSchool">相关学校</label>
+                    <select id="questionSchool" class="form-select">
+                        <option value="">请选择学校</option>
+                        <option value="北京大学">北京大学</option>
+                        <option value="清华大学">清华大学</option>
+                        <option value="复旦大学">复旦大学</option>
+                        <option value="上海交通大学">上海交通大学</option>
+                        <option value="浙江大学">浙江大学</option>
+                        <option value="南京大学">南京大学</option>
+                        <option value="其他">其他学校</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="questionTags">标签</label>
+                    <input type="text" id="questionTags" class="form-input" placeholder="请输入标签，多个标签用逗号分隔">
+                    <div class="form-hint">例如：图书馆, 开放时间, 预约</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="questionContent">问题描述</label>
+                    <textarea id="questionContent" class="form-textarea" placeholder="请详细描述你的问题..." required></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">发布问题</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="footer-nav">
+        <a href="index.html" class="nav-item">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" fill="#4A6DE5"/>
+            </svg>
+            <span class="nav-text">首页</span>
+        </a>
+        <a href="school-category.html" class="nav-item">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z" fill="#4A6DE5"/>
+            </svg>
+            <span class="nav-text">学校</span>
+        </a>
+        <a href="ar-page.html" class="nav-item">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <text x="12" y="18" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#4A6DE5" text-anchor="middle">AR</text>
+            </svg>
+            <span class="nav-text">AR</span>
+        </a>
+        <a href="vr-page.html" class="nav-item">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <text x="12" y="18" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#4A6DE5" text-anchor="middle">VR</text>
+            </svg>
+            <span class="nav-text">VR</span>
+        </a>
+        <a href="forum.html" class="nav-item active">
+            <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="#4A6DE5"/>
+            </svg>
+            <span class="nav-text">论坛</span>
+        </a>
+    </div>
+
+    <!-- 引入脚本 -->
+    <script src="./js/theme.js"></script>
+    <script src="./js/forum.js"></script>
+</body>
+</html>

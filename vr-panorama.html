@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VR全景漫游</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <style>
+        /* VR全景页面特定样式 */
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #vr-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            flex-direction: column;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.7);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            max-width: 80%;
+            text-align: center;
+            display: none;
+        }
+
+        .vr-controls {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .vr-button {
+            background-color: rgba(74, 109, 229, 0.8);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .vr-ui {
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .vr-info {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .spot-selector {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            max-width: 200px;
+        }
+
+        .spot-selector h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .spot-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .spot-item:hover {
+            background-color: rgba(74, 109, 229, 0.1);
+        }
+
+        .spot-item:last-child {
+            border-bottom: none;
+        }
+
+        .spot-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #4a6de5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .spot-name {
+            flex: 1;
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: rgba(74, 109, 229, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .back-button a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .spot-selector {
+                right: 10px;
+                padding: 10px;
+                max-width: 150px;
+            }
+
+            .vr-controls {
+                bottom: 10px;
+                gap: 10px;
+            }
+
+            .vr-button {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="vr-container">
+        <div id="loading-screen">
+            <div class="loading-spinner"></div>
+            <p>正在加载VR全景场景...</p>
+            <div class="error-message" id="error-message">
+                加载失败，请刷新页面重试
+            </div>
+        </div>
+
+        <!-- A-Frame场景 -->
+        <a-scene vr-mode-ui="enabled: true" id="vr-scene">
+            <!-- 全景图背景 -->
+            <a-sky id="panorama-sky" src="./assets/panorama/gate.jpg"></a-sky>
+
+            <!-- 导航点 -->
+            <a-entity id="navigation-points">
+                <!-- 校门 -->
+                <a-image 
+                    id="gate-point"
+                    src="./assets/info/gate-marker.png"
+                    width="2"
+                    height="2"
+                    position="5 1.5 -5"
+                    look-at="[camera]"
+                    class="clickable"
+                    data-spot="gate"
+                    data-name="校门">
+                </a-image>
+
+                <!-- 主教学楼 -->
+                <a-image 
+                    id="building-point"
+                    src="./assets/info/building-marker.png"
+                    width="2"
+                    height="2"
+                    position="-5 1.5 5"
+                    look-at="[camera]"
+                    class="clickable"
+                    data-spot="building"
+                    data-name="主教学楼">
+                </a-image>
+
+                <!-- 图书馆 -->
+                <a-image 
+                    id="library-point"
+                    src="./assets/info/library-marker.png"
+                    width="2"
+                    height="2"
+                    position="0 1.5 5"
+                    look-at="[camera]"
+                    class="clickable"
+                    data-spot="library"
+                    data-name="图书馆">
+                </a-image>
+
+                <!-- 体育馆 -->
+                <a-image 
+                    id="gym-point"
+                    src="./assets/info/gym-marker.png"
+                    width="2"
+                    height="2"
+                    position="10 1.5 0"
+                    look-at="[camera]"
+                    class="clickable"
+                    data-spot="gym"
+                    data-name="体育馆">
+                </a-image>
+
+                <!-- 食堂 -->
+                <a-image 
+                    id="canteen-point"
+                    src="./assets/info/canteen-marker.png"
+                    width="2"
+                    height="2"
+                    position="-10 1.5 0"
+                    look-at="[camera]"
+                    class="clickable"
+                    data-spot="canteen"
+                    data-name="食堂">
+                </a-image>
+            </a-entity>
+
+            <!-- 信息面板 -->
+            <a-entity id="info-panel" visible="false">
+                <a-plane 
+                    position="0 1.5 -3" 
+                    width="4" 
+                    height="2" 
+                    color="#ffffff" 
+                    opacity="0.8">
+                </a-plane>
+                <a-text 
+                    id="info-text" 
+                    position="0 1.5 -2.9" 
+                    width="3.8" 
+                    height="1.8"
+                    align="center"
+                    value="">
+                </a-text>
+            </a-entity>
+
+            <!-- 相机 -->
+            <a-camera>
+                <a-cursor></a-cursor>
+            </a-camera>
+        </a-scene>
+
+        <!-- 点位选择器 -->
+        <div class="spot-selector">
+            <h3>选择点位</h3>
+            <div class="spot-item" data-spot="gate">
+                <div class="spot-icon">1</div>
+                <div class="spot-name">校门</div>
+            </div>
+            <div class="spot-item" data-spot="building">
+                <div class="spot-icon">2</div>
+                <div class="spot-name">主教学楼</div>
+            </div>
+            <div class="spot-item" data-spot="library">
+                <div class="spot-icon">3</div>
+                <div class="spot-name">图书馆</div>
+            </div>
+            <div class="spot-item" data-spot="gym">
+                <div class="spot-icon">4</div>
+                <div class="spot-name">体育馆</div>
+            </div>
+            <div class="spot-item" data-spot="canteen">
+                <div class="spot-icon">5</div>
+                <div class="spot-name">食堂</div>
+            </div>
+        </div>
+
+        <!-- 返回按钮 -->
+        <div class="back-button">
+            <a href="index.html">返回首页</a>
+        </div>
+
+        <!-- VR控制按钮 -->
+        <div class="vr-controls">
+            <button class="vr-button" id="reset-btn">重置视角</button>
+            <button class="vr-button" id="auto-rotate-btn">自动旋转</button>
+        </div>
+
+        <!-- VR信息提示 -->
+        <div class="vr-ui">
+            <div class="vr-info">
+                <p>点击图像导航到不同地点</p>
+                <p>或戴上VR眼镜体验沉浸式漫游</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- A-Frame库 -->
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const scene = document.querySelector('#vr-scene');
+            const sky = document.querySelector('#panorama-sky');
+            const loadingScreen = document.querySelector('#loading-screen');
+            const errorMessage = document.querySelector('#error-message');
+            const points = document.querySelectorAll('.clickable');
+            const infoPanel = document.querySelector('#info-panel');
+            const infoText = document.querySelector('#info-text');
+            const resetBtn = document.querySelector('#reset-btn');
+            const autoRotateBtn = document.querySelector('#auto-rotate-btn');
+            const spotItems = document.querySelectorAll('.spot-item');
+
+            let autoRotate = false;
+            let rotationInterval;
+
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const currentSpot = urlParams.get('spot') || 'gate';
+
+            // 设置初始全景图
+            sky.setAttribute('src', `./assets/panorama/${currentSpot}.jpg`);
+
+            // 场景加载完成事件
+            scene.addEventListener('loaded', function() {
+                // 延迟隐藏加载屏幕，确保场景完全加载
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 1500);
+            });
+
+            // 场景加载错误处理
+            scene.addEventListener('error', function() {
+                errorMessage.style.display = 'block';
+                loadingScreen.querySelector('p').textContent = '加载VR场景时出错';
+            });
+
+            // 图片加载错误处理
+            sky.addEventListener('materialtextureloaded', function() {
+                console.log('全景图加载成功');
+            });
+
+            sky.addEventListener('materialtextureerror', function() {
+                errorMessage.style.display = 'block';
+                errorMessage.textContent = '无法加载全景图，请检查资源路径';
+            });
+
+            // 导航点点击事件
+            points.forEach(point => {
+                point.addEventListener('click', function() {
+                    const spot = this.getAttribute('data-spot');
+                    const name = this.getAttribute('data-name');
+
+                    // 更新全景图
+                    sky.setAttribute('src', `./assets/panorama/${spot}.jpg`);
+
+                    // 显示信息
+                    infoText.setAttribute('value', name);
+                    infoPanel.setAttribute('visible', 'true');
+
+                    // 3秒后隐藏信息面板
+                    setTimeout(() => {
+                        infoPanel.setAttribute('visible', 'false');
+                    }, 3000);
+                });
+            });
+
+            // 点位选择器点击事件
+            spotItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const spot = this.getAttribute('data-spot');
+                    sky.setAttribute('src', `./assets/panorama/${spot}.jpg`);
+                });
+            });
+
+            // 重置视角按钮
+            resetBtn.addEventListener('click', function() {
+                const camera = document.querySelector('a-camera');
+                camera.setAttribute('rotation', '0 0 0');
+                camera.setAttribute('position', '0 0 0');
+            });
+
+            // 自动旋转按钮
+            autoRotateBtn.addEventListener('click', function() {
+                autoRotate = !autoRotate;
+
+                if (autoRotate) {
+                    this.textContent = '停止旋转';
+                    this.style.backgroundColor = 'rgba(255, 87, 34, 0.8)';
+
+                    rotationInterval = setInterval(() => {
+                        const camera = document.querySelector('a-camera');
+                        const rotation = camera.getAttribute('rotation');
+                        camera.setAttribute('rotation', {
+                            x: rotation.x,
+                            y: rotation.y + 1,
+                            z: rotation.z
+                        });
+                    }, 50);
+                } else {
+                    this.textContent = '自动旋转';
+                    this.style.backgroundColor = 'rgba(74, 109, 229, 0.8)';
+                    clearInterval(rotationInterval);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

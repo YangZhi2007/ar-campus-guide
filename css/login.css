@@ -1,0 +1,223 @@
+/* 登录页面样式 */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+    text-align: center;
+}
+
+.login-title {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-item {
+    width: 100%;
+}
+
+.form-item input {
+    width: 100%;
+    height: 48px;
+    padding: 0 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-item input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.remember-label {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--text-color);
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.remember-label input {
+    margin-right: 8px;
+}
+
+.login-btn {
+    width: 100%;
+    height: 48px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* 暗夜模式适配 */
+.dark-theme .login-card {
+    box-shadow: var(--shadow);
+}
+
+/* 登录页头部样式 */
+.login-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.login-logo {
+    margin-bottom: 15px;
+}
+
+/* 输入框包装器样式 */
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.input-wrapper input {
+    padding-left: 40px;
+    padding-right: 50px;
+}
+
+/* 密码切换按钮样式 */
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye-icon path {
+    transition: fill 0.3s;
+}
+
+.toggle-password:hover .eye-icon path {
+    fill: var(--primary-color);
+}
+
+/* 状态提示样式 */
+.status-message {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-message.success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+    border: 1px solid #4CAF50;
+}
+
+.status-message.error {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: #F44336;
+    border: 1px solid #F44336;
+}
+
+.status-message.info {
+    background-color: rgba(33, 150, 243, 0.1);
+    color: #2196F3;
+    border: 1px solid #2196F3;
+}
+
+.status-message.warning {
+    background-color: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+    border: 1px solid #FF9800;
+}
+
+/* 表单操作区域样式 */
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.forgot-password,
+.register-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover,
+.register-link:hover {
+    text-decoration: underline;
+}
+
+/* 社交登录样式 */
+.social-login {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.social-title {
+    color: var(--text-color);
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.social-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.social-btn:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.social-btn:hover .social-icon path {
+    fill: white;
+}
