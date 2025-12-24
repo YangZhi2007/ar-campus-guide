@@ -1,24 +1,29 @@
-# 忽略系统文件
-.DS_Store
-Thumbs.db
+# 依赖包（前端项目必忽略）
+node_modules/
 
-# 忽略编辑器配置文件
-.vscode/
+# 打包产物（比赛打包后的dist文件夹无需提交）
+dist/
+
+# 环境配置文件
+.env
+.env.local
+
+# 编辑器缓存文件
 .idea/
+# .vscode/ (允许提交)
 *.swp
 *.swo
 
-# 忽略日志文件
+# 操作系统文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+logs/
+
+# 其他忽略文件
 *.log
-
-# 忽略依赖目录
-node_modules/
-
-# 忽略构建输出目录
 unpackage/
-dist/
 build/
-
-# 忽略临时文件
 *.tmp
 *.temp
