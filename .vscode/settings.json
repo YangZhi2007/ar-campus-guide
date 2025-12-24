@@ -1,0 +1,15 @@
+{
+    "git.enableSmartCommit": true,
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "git.postCommitCommand": "none",
+    "git.showInlineOpenFileAction": false,
+    "git.suggestSmartCommit": false,
+    "git.untrackedChanges": "separate",
+    "git.ignoreLimitWarning": true,
+    "git.branchProtection": ["master"],
+    "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
+    "git.checkoutType": "local",
+    "git.showCommitInput": true,
+    "git.path": null
+}

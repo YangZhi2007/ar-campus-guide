@@ -1,0 +1,76 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Git: 查看状态",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "status"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Git: 添加所有文件",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "add",
+                "."
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Git: 提交",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "commit",
+                "-m",
+                "自动提交"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Git: 查看提交历史",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "log",
+                "--oneline",
+                "-10"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Git: 查看分支",
+            "type": "shell",
+            "command": "git",
+            "args": [
+                "branch",
+                "-a"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "new"
+            }
+        }
+    ]
+}
