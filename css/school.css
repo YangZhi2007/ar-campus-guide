@@ -1,5 +1,49 @@
 /* 学校分类/详情页样式 */
 
+/* 返回按钮样式 */
+button.back-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(66, 153, 225, 0.2);
+  margin-right: 8px;
+}
+
+button.back-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+}
+
+button.back-btn:active {
+  transform: scale(0.95);
+}
+
+button.back-btn .back-icon {
+  width: 24px;
+  height: 24px;
+}
+
+button.back-btn .back-icon-path {
+  fill: #ffffff;
+}
+
+/* 夜间模式下的返回按钮样式 */
+.dark-theme button.back-btn {
+  background-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(96, 165, 250, 0.2);
+}
+
+.dark-theme button.back-btn:hover {
+  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
+}
+
 /* 学校分类页样式 */
 .school-category-container {
     padding: 20px 16px;

@@ -1,97 +1,165 @@
-// 学校数据
-const schoolData = [
-    {
-        id: 'peking',
-        name: '北京大学',
-        location: '北京市海淀区',
-        image: './assets/school/peking.jpg',
-        tags: ['985', '211', '双一流'],
-        description: '北京大学创办于1898年，是中国近代第一所国立综合性大学，被公认为中国最高学府。',
-        stats: {
-            students: '3万+',
-            teachers: '3000+',
-            area: '270万㎡'
-        },
-        facilities: [
-            { id: 'library', name: '图书馆', icon: './assets/icon/library.png' },
-            { id: 'gym', name: '体育馆', icon: './assets/icon/gym.png' },
-            { id: 'dorm', name: '宿舍区', icon: './assets/icon/dorm.png' },
-            { id: 'canteen', name: '食堂', icon: './assets/icon/canteen.png' },
-            { id: 'teaching', name: '教学楼', icon: './assets/icon/teaching.png' },
-            { id: 'gate', name: '校门', icon: './assets/icon/gate.png' }
-        ]
-    },
-    {
-        id: 'tsinghua',
-        name: '清华大学',
-        location: '北京市海淀区',
-        image: './assets/school/tsinghua.jpg',
-        tags: ['985', '211', '双一流'],
-        description: '清华大学的前身清华学堂始建于1911年，是中国高层次人才培养和科学技术研究的重要基地。',
-        stats: {
-            students: '5万+',
-            teachers: '3500+',
-            area: '442万㎡'
-        },
-        facilities: [
-            { id: 'library', name: '图书馆', icon: './assets/icon/library.png' },
-            { id: 'gym', name: '体育馆', icon: './assets/icon/gym.png' },
-            { id: 'dorm', name: '宿舍区', icon: './assets/icon/dorm.png' },
-            { id: 'canteen', name: '食堂', icon: './assets/icon/canteen.png' },
-            { id: 'teaching', name: '教学楼', icon: './assets/icon/teaching.png' },
-            { id: 'gate', name: '校门', icon: './assets/icon/gate.png' }
-        ]
-    },
-    {
-        id: 'fudan',
-        name: '复旦大学',
-        location: '上海市杨浦区',
-        image: './assets/school/fudan.jpg',
-        tags: ['985', '211', '双一流'],
-        description: '复旦大学创建于1905年，是中国人自主创办的第一所高等院校，校名"复旦"二字选自《尚书大传·虞夏传》。',
-        stats: {
-            students: '3.5万+',
-            teachers: '2800+',
-            area: '244万㎡'
-        },
-        facilities: [
-            { id: 'library', name: '图书馆', icon: './assets/icon/library.png' },
-            { id: 'gym', name: '体育馆', icon: './assets/icon/gym.png' },
-            { id: 'dorm', name: '宿舍区', icon: './assets/icon/dorm.png' },
-            { id: 'canteen', name: '食堂', icon: './assets/icon/canteen.png' },
-            { id: 'teaching', name: '教学楼', icon: './assets/icon/teaching.png' },
-            { id: 'gate', name: '校门', icon: './assets/icon/gate.png' }
-        ]
+// 使用全国高等学校名单数据
+let schoolData = [];
+
+// 从school-data.js加载数据
+async function loadSchoolData() {
+    try {
+        // 先加载全国高等学校名单数据
+        if (typeof nationalUniversitiesLoader !== 'undefined') {
+            const nationalData = await nationalUniversitiesLoader.load();
+            
+            // 转换数据格式
+            schoolData = nationalData.map(school => ({
+                id: school.id,
+                name: school.name,
+                location: school.location,
+                province: school.province,
+                city: school.location,
+                type: school.level === '本科' ? '本科' : '专科',
+                level: school.level,
+                tags: [school.level],
+                description: `${school.name}是一所位于${school.location}的${school.level}院校，主管部门为${school.department}。`,
+                image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRBNkRFNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZmZmZmZmIj7kuozkuIrkv6Hmga/ogIHlmL48L3RleHQ+PC9zdmc+',
+                stats: {
+                    students: '暂无数据',
+                    teachers: '暂无数据',
+                    area: '暂无数据'
+                },
+                facilities: [
+                    { id: 'library', name: '图书馆', icon: './assets/icon/library.svg' },
+                    { id: 'gym', name: '体育馆', icon: './assets/icon/gym.svg' },
+                    { id: 'dorm', name: '宿舍区', icon: './assets/icon/dorm.svg' },
+                    { id: 'canteen', name: '食堂', icon: './assets/icon/canteen.svg' },
+                    { id: 'teaching', name: '教学楼', icon: './assets/icon/teaching.svg' },
+                    { id: 'gate', name: '校门', icon: './assets/icon/gate.svg' }
+                ]
+            }));
+        }
+        
+        // 如果有school-data.js中的数据，可以合并
+        if (typeof nationalUniversities !== 'undefined') {
+            const additionalSchools = nationalUniversities.map(school => ({
+                ...school,
+                image: school.image || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzRBNkRFNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZmZmZmZmIj7kuozkuIrkv6Hmga/ogIHlmL48L3RleHQ+PC9zdmc+'
+            }));
+            
+            // 合并数据，避免重复
+            const existingIds = new Set(schoolData.map(s => s.id));
+            additionalSchools.forEach(school => {
+                if (!existingIds.has(school.id)) {
+                    schoolData.push(school);
+                }
+            });
+        }
+    } catch (error) {
+        console.error('加载学校数据失败:', error);
     }
-];
+}
 
-// 地区数据
-const regionData = [
-    { id: 'all', name: '全部地区' },
-    { id: 'beijing', name: '北京' },
-    { id: 'shanghai', name: '上海' },
-    { id: 'guangdong', name: '广东' },
-    { id: 'jiangsu', name: '江苏' },
-    { id: 'zhejiang', name: '浙江' },
-    { id: 'hubei', name: '湖北' },
-    { id: 'sichuan', name: '四川' }
-];
+// 地区数据 - 使用全国省份数据
+let regionData = [];
 
-// 学校类型数据
-const typeData = [
-    { id: 'all', name: '全部类型' },
-    { id: '985', name: '985工程' },
-    { id: '211', name: '211工程' },
-    { id: 'double', name: '双一流' },
-    { id: 'general', name: '普通本科' },
-    { id: 'vocational', name: '高职高专' }
-];
+// 从全国高等学校名单加载数据
+async function loadRegionData() {
+    try {
+        if (typeof nationalUniversitiesLoader !== 'undefined') {
+            await nationalUniversitiesLoader.load();
+            const provinces = nationalUniversitiesLoader.getProvinces();
+            
+            // 转换为标准格式
+            regionData = [
+                { id: 'all', name: '全部' },
+                ...provinces.map(province => ({
+                    id: province,
+                    name: province
+                }))
+            ];
+        }
+        
+        // 如果有school-data.js中的数据，可以合并
+        if (typeof provinceData !== 'undefined') {
+            const existingIds = new Set(regionData.map(r => r.id));
+            provinceData.forEach(province => {
+                if (!existingIds.has(province.id)) {
+                    regionData.push(province);
+                }
+            });
+        }
+    } catch (error) {
+        console.error('加载地区数据失败:', error);
+    }
+}
+
+// 学校类型数据 - 使用全国学校类型数据
+let typeData = [];
+
+// 从全国高等学校名单加载数据
+async function loadTypeData() {
+    try {
+        if (typeof nationalUniversitiesLoader !== 'undefined') {
+            await nationalUniversitiesLoader.load();
+            const schoolTypes = nationalUniversitiesLoader.getSchoolTypes();
+            
+            // 转换为标准格式
+            typeData = [
+                { id: 'all', name: '全部' },
+                ...schoolTypes.map(type => ({
+                    id: type,
+                    name: type
+                }))
+            ];
+        }
+        
+        // 如果有school-data.js中的数据，可以合并
+        if (typeof schoolTypeData !== 'undefined') {
+            const existingIds = new Set(typeData.map(t => t.id));
+            schoolTypeData.forEach(type => {
+                if (!existingIds.has(type.id)) {
+                    typeData.push(type);
+                }
+            });
+        }
+    } catch (error) {
+        console.error('加载学校类型数据失败:', error);
+    }
+}
 
 // 初始化学校分类页
-function initSchoolCategory() {
-    renderFilterOptions();
-    renderSchoolList(schoolData);
-    bindFilterEvents();
+async function initSchoolCategory() {
+    // 显示加载提示
+    const schoolListContainer = document.getElementById('schoolList');
+    if (schoolListContainer) {
+        schoolListContainer.innerHTML = '<div class="loading">加载中...</div>';
+    }
+    
+    try {
+        // 加载数据
+        await loadSchoolData();
+        await loadRegionData();
+        await loadTypeData();
+    
+        // 检查是否有搜索参数
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('search');
+        
+        if (searchQuery) {
+            // 执行搜索
+            const searchResults = searchSchools(searchQuery.toLowerCase());
+            renderSchoolList(searchResults);
+            // 显示搜索结果提示
+            showSearchResultsInfo(searchQuery, searchResults.length);
+        } else {
+            // 显示所有学校
+            renderFilterOptions();
+            renderSchoolList(schoolData);
+            bindFilterEvents();
+        }
+    } catch (error) {
+        console.error('初始化学校分类页失败:', error);
+        if (schoolListContainer) {
+            schoolListContainer.innerHTML = '<div class="error">加载失败，请刷新页面重试</div>';
+        }
+    }
 }
 
 // 渲染筛选选项
@@ -171,19 +239,12 @@ function filterSchools() {
 
     // 按地区筛选
     if (activeRegion !== 'all') {
-        filteredSchools = filteredSchools.filter(school => {
-            const location = school.location;
-            switch(activeRegion) {
-                case 'beijing': return location.includes('北京');
-                case 'shanghai': return location.includes('上海');
-                case 'guangdong': return location.includes('广东');
-                case 'jiangsu': return location.includes('江苏');
-                case 'zhejiang': return location.includes('浙江');
-                case 'hubei': return location.includes('湖北');
-                case 'sichuan': return location.includes('四川');
-                default: return true;
-            }
-        });
+        const regionName = regionData.find(r => r.id === activeRegion)?.name || '';
+        if (regionName) {
+            filteredSchools = filteredSchools.filter(school => {
+                return school.province === regionName || school.location.includes(regionName);
+            });
+        }
     }
 
     // 按类型筛选
@@ -207,7 +268,17 @@ function navigateToSchool(schoolId) {
 }
 
 // 初始化学校详情页
-function initSchoolDetail() {
+async function initSchoolDetail() {
+    // 显示加载提示
+    const schoolInfo = document.getElementById('schoolInfo');
+    if (schoolInfo) {
+        schoolInfo.innerHTML = '<div class="loading">加载中...</div>';
+    }
+    
+    try {
+        // 加载数据
+        await loadSchoolData();
+    
     const urlParams = new URLSearchParams(window.location.search);
     const schoolId = urlParams.get('school');
 
@@ -222,7 +293,13 @@ function initSchoolDetail() {
         return;
     }
 
-    renderSchoolDetail(school);
+        renderSchoolDetail(school);
+    } catch (error) {
+        console.error('初始化学校详情页失败:', error);
+        if (schoolInfo) {
+            schoolInfo.innerHTML = '<div class="error">加载失败，请刷新页面重试</div>';
+        }
+    }
 }
 
 // 渲染学校详情
@@ -278,6 +355,40 @@ function renderSchoolDetail(school) {
 // 查看设施详情
 function viewFacility(schoolId, facilityId) {
     window.location.href = `ar-page.html?school=${schoolId}&facility=${facilityId}`;
+}
+
+// 搜索学校
+function searchSchools(query) {
+    if (!query || query.trim() === '') return schoolData;
+    
+    return schoolData.filter(school => {
+        const nameMatch = school.name.toLowerCase().includes(query);
+        const locationMatch = school.location && school.location.toLowerCase().includes(query);
+        const tagsMatch = school.tags && school.tags.some(tag => tag.toLowerCase().includes(query));
+        const descriptionMatch = school.description && school.description.toLowerCase().includes(query);
+        return nameMatch || locationMatch || tagsMatch || descriptionMatch;
+    });
+}
+
+// 显示搜索结果信息
+function showSearchResultsInfo(query, count) {
+    const schoolListContainer = document.getElementById('schoolList');
+    if (!schoolListContainer) return;
+    
+    const infoDiv = document.createElement('div');
+    infoDiv.className = 'search-results-info';
+    infoDiv.innerHTML = `
+        <div class="search-query">搜索结果："<span>${query}</span>"</div>
+        <div class="search-count">找到 ${count} 所学校</div>
+        <button class="clear-search-btn" onclick="clearSearch()">清除搜索</button>
+    `;
+    
+    schoolListContainer.insertBefore(infoDiv, schoolListContainer.firstChild);
+}
+
+// 清除搜索
+function clearSearch() {
+    window.location.href = 'school-category.html';
 }
 
 // 页面加载完成后初始化

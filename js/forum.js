@@ -8,7 +8,7 @@ const forumData = {
             author: {
                 id: 'user1',
                 name: '校园探索者',
-                avatar: './assets/icon/user-avatar.png'
+                avatar: './assets/icon/user-avatar.svg'
             },
             school: '北京大学',
             tags: ['图书馆', '开放时间'],
@@ -21,7 +21,7 @@ const forumData = {
                     author: {
                         id: 'user2',
                         name: '北大学生',
-                        avatar: './assets/icon/user-avatar.png'
+                        avatar: './assets/icon/user-avatar.svg'
                     },
                     content: '北京大学图书馆周一至周日7:00-22:00开放，需要刷校园卡进入。校外人员需要提前预约。',
                     createTime: '2023-10-15 11:20',
@@ -32,7 +32,7 @@ const forumData = {
                     author: {
                         id: 'user3',
                         name: '图书馆管理员',
-                        avatar: './assets/icon/user-avatar.png'
+                        avatar: './assets/icon/user-avatar.svg'
                     },
                     content: '补充一下，校外人员预约可以通过北京大学图书馆官网或微信公众号进行，每天限流100人。',
                     createTime: '2023-10-15 14:30',
@@ -47,7 +47,7 @@ const forumData = {
             author: {
                 id: 'user4',
                 name: '美食爱好者',
-                avatar: './assets/icon/user-avatar.png'
+                avatar: './assets/icon/user-avatar.svg'
             },
             school: '清华大学',
             tags: ['食堂', '美食'],
@@ -60,7 +60,7 @@ const forumData = {
                     author: {
                         id: 'user5',
                         name: '清华吃货',
-                        avatar: './assets/icon/user-avatar.png'
+                        avatar: './assets/icon/user-avatar.svg'
                     },
                     content: '推荐桃李园食堂，环境好，菜品丰富，特别是烤鸭和麻辣香锅很受欢迎。',
                     createTime: '2023-10-14 16:30',
@@ -75,7 +75,7 @@ const forumData = {
             author: {
                 id: 'user6',
                 name: '大学游览者',
-                avatar: './assets/icon/user-avatar.png'
+                avatar: './assets/icon/user-avatar.svg'
             },
             school: '复旦大学',
             tags: ['参观', '预约'],
@@ -297,7 +297,7 @@ function publishQuestion() {
         author: {
             id: 'currentUser',
             name: '当前用户',
-            avatar: './assets/icon/user-avatar.png'
+            avatar: './assets/icon/user-avatar.svg'
         },
         school: school || '未指定学校',
         tags: tags.length > 0 ? tags : ['其他'],

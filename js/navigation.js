@@ -14,17 +14,20 @@ function handleHeaderScroll() {
 
 // 更新底部导航栏激活状态
 function updateFooterNav() {
-    const currentPath = window.location.pathname;
+    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
     const navItems = document.querySelectorAll('.footer-nav .nav-item');
 
     navItems.forEach(item => {
         const href = item.getAttribute('href');
-        if (href === currentPath || 
-            (currentPath.includes(href) && href !== '/') ||
-            (currentPath.endsWith('/') && href === 'index.html')) {
+        const page = item.getAttribute('data-page');
+        // 根据页面类型判断
+        if (page === 'index' && (currentPath === 'index.html' || currentPath === '' || currentPath === '/')) { 
+        } else if (page === 'school' && currentPath.includes('school')) {
             item.classList.add('active');
-        } else {
-            item.classList.remove('active');
+        } else if (page === 'forum' && currentPath.includes('forum')) {
+            item.classList.add('active');
+        } else if (page === 'user' && currentPath.includes('user')) {
+            item.classList.add('active');
         }
     });
 }

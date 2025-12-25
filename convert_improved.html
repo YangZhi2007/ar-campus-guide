@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据转换工具 - 改进版</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+        .status.info {
+            background: #e7f3ff;
+            color: #0c5460;
+            display: block;
+        }
+        .info {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+        }
+        .upload-area {
+            margin: 20px 0;
+            padding: 30px;
+            border: 2px dashed #4A6DE5;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            background: #f0f7ff;
+        }
+        .upload-area.dragover {
+            background: #e7f3ff;
+            border-color: #2196F3;
+        }
+        .upload-area p {
+            margin: 10px 0;
+            color: #666;
+        }
+        .upload-area strong {
+            color: #4A6DE5;
+        }
+        #fileInput {
+            display: none;
+        }
+        button {
+            background: #4A6DE5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #3b5bdb;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .file-info {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            display: none;
+        }
+        .progress {
+            margin: 20px 0;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #4A6DE5;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>全国高等学校名单数据转换工具 - 改进版</h1>
+        
+        <div class="info">
+            <p>请选择 <strong>全国高等学校名单.json</strong> 文件进行转换</p>
+            <p>此版本采用分块处理，支持大文件转换</p>
+        </div>
+        
+        <div id="status" class="status"></div>
+        
+        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <p>点击选择文件 或 将文件拖放到此处</p>
+            <p><strong>全国高等学校名单.json</strong></p>
+        </div>
+        
+        <input type="file" id="fileInput" accept=".json" onchange="handleFileSelect(event)">
+        
+        <div id="fileInfo" class="file-info"></div>
+        
+        <div id="progress" class="progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0%</div>
+        </div>
+        
+        <button id="convertBtn" onclick="convertData()" disabled>开始转换</button>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        const CHUNK_SIZE = 1000; // 每次处理1000条数据
+
+        // 拖放功能
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.json')) {
+                showStatus('请选择JSON格式的文件', 'error');
+                return;
+            }
+            
+            selectedFile = file;
+            const fileInfo = document.getElementById('fileInfo');
+            fileInfo.style.display = 'block';
+            fileInfo.textContent = `已选择文件: ${file.name} (${formatFileSize(file.size)})`;
+            
+            document.getElementById('convertBtn').disabled = false;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.className = 'status ' + type;
+            status.textContent = message;
+        }
+
+        function updateProgress(percent, text) {
+            const progress = document.getElementById('progress');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progress.style.display = 'block';
+            progressFill.style.width = percent + '%';
+            progressText.textContent = text || percent + '%';
+        }
+
+        async function convertData() {
+            const btn = document.getElementById('convertBtn');
+            
+            if (!selectedFile) {
+                showStatus('请先选择文件', 'error');
+                return;
+            }
+            
+            try {
+                btn.disabled = true;
+                showStatus('正在读取JSON文件...', 'info');
+                updateProgress(0, '正在读取文件...');
+                
+                // 读取文件
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        const total = data.length;
+                        showStatus(`成功读取 ${total} 条数据，正在转换...`, 'info');
+                        
+                        // 创建JS文件内容
+                        let jsContent = `/**
+ * 全国高等学校名单数据
+ * 数据来源：全国高等学校名单.json
+ * 更新时间：2025年6月20日
+ *
+ * 此文件包含全国所有普通高等学校的数据
+ */
+
+const nationalUniversitiesRawData = `;
+                        
+                        // 分块处理数据
+                        let processed = 0;
+                        const chunks = [];
+                        
+                        function processChunk() {
+                            const end = Math.min(processed + CHUNK_SIZE, total);
+                            const chunk = data.slice(processed, end);
+                            chunks.push(JSON.stringify(chunk, null, 2));
+                            
+                            processed = end;
+                            const percent = Math.round((processed / total) * 100);
+                            updateProgress(percent, `正在转换... ${processed}/${total} (${percent}%)`);
+                            
+                            if (processed < total) {
+                                // 使用setTimeout避免阻塞UI
+                                setTimeout(processChunk, 0);
+                            } else {
+                                // 完成处理
+                                jsContent += chunks.join(',\n');
+                                jsContent += ';\n';
+                                
+                                showStatus(`转换成功！共转换 ${total} 条数据。正在下载文件...`, 'success');
+                                
+                                // 创建下载链接
+                                const blob = new Blob([jsContent], { type: 'text/javascript;charset=utf-8' });
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = 'national-universities-data.js';
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                                
+                                showStatus(`转换完成！共转换 ${total} 条数据。文件已下载，请将其保存到 js/ 目录中。`, 'success');
+                                btn.disabled = false;
+                            }
+                        }
+                        
+                        // 开始处理
+                        processChunk();
+                        
+                    } catch (error) {
+                        showStatus('解析JSON文件失败: ' + error.message, 'error');
+                        console.error('解析失败:', error);
+                        btn.disabled = false;
+                    }
+                };
+                
+                reader.onerror = function() {
+                    showStatus('读取文件失败', 'error');
+                    btn.disabled = false;
+                };
+                
+                reader.readAsText(selectedFile);
+                
+            } catch (error) {
+                showStatus('转换失败: ' + error.message, 'error');
+                console.error('转换失败:', error);
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
