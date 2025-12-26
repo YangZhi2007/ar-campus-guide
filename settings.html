@@ -1,382 +1,399 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>设置 - 校园导览</title>
     <link rel="stylesheet" href="./css/global.css" />
     <link rel="stylesheet" href="./css/user-center.css" />
     <style>
-        /* 设置页面特定样式 */
-        .settings-container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px 20px;
-        }
+      /* 设置页面特定样式 */
+      .settings-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px 16px;
+      }
 
-        .settings-section {
-            background: var(--user-center-card-bg);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 24px;
-            transition: all 0.3s ease;
-        }
+      .settings-section {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-top: 50px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease;
+        border: 1px solid #e5e7eb;
+      }
 
-        .user-theme-dark .settings-section {
-            background: var(--user-center-card-bg-dark);
-        }
+      .user-theme-dark .settings-section {
+        background: #1e293b;
+        border-color: #374151;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
 
-        .settings-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--user-center-text);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+      .settings-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.5s ease;
+      }
 
-        .user-theme-dark .settings-title {
-            color: var(--user-center-text-dark);
-        }
+      .user-theme-dark .settings-title {
+        color: #ffffff;
+      }
 
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 0;
-            border-bottom: 1px solid var(--user-center-border);
-            transition: all 0.3s ease;
-        }
+      .settings-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 0;
+        border-bottom: 1px solid #e5e7eb;
+        transition: border-bottom-color 0.5s ease;
+      }
 
-        .user-theme-dark .settings-item {
-            border-bottom-color: var(--user-center-border-dark);
-        }
+      .user-theme-dark .settings-item {
+        border-bottom-color: #374151;
+      }
 
-        .settings-item:hover {
-            background: var(--user-center-icon);
-            opacity: 0.05;
-        }
+      .settings-item:hover {
+        background: linear-gradient(135deg, rgba(74, 109, 229, 0.05) 0%, rgba(99, 102, 241, 0.05) 100%);
+      }
 
-        .settings-label {
-            font-size: 16px;
-            color: var(--user-center-text);
-            flex: 1;
-        }
+      .settings-label {
+        font-size: 14px;
+        color: #1a1a1a;
+        flex: 1;
+        transition: color 0.5s ease;
+      }
 
-        .user-theme-dark .settings-label {
-            color: var(--user-center-text-dark);
-        }
+      .user-theme-dark .settings-label {
+        color: #ffffff;
+      }
 
-        .settings-value {
-            font-size: 16px;
-            color: var(--user-center-text);
-            flex: 1;
-            text-align: right;
-        }
+      .settings-value {
+        font-size: 14px;
+        color: #6b7280;
+        flex: 1;
+        text-align: right;
+        transition: color 0.5s ease;
+      }
 
-        .user-theme-dark .settings-value {
-            color: var(--user-center-text-dark);
-        }
+      .user-theme-dark .settings-value {
+        color: var(--user-center-text-dark);
+      }
 
-        .settings-control {
-            display: flex;
-            gap: 12px;
-        }
+      .settings-control {
+        display: flex;
+        gap: 12px;
+      }
 
-        .toggle-switch {
-            position: relative;
-            width: 50px;
-            height: 26px;
-            background: var(--user-center-icon);
-            border-radius: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .toggle-switch {
+        position: relative;
+        width: 48px;
+        height: 24px;
+        background: #e5e7eb;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-        .toggle-switch.active {
-            background: #4A6DE5;
-        }
+      .toggle-switch.active {
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+      }
 
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
+      .toggle-switch::after {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 20px;
+        height: 20px;
+        background: white;
+        border-radius: 50%;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-        .toggle-switch.active::after {
-            left: 27px;
-        }
+      .toggle-switch.active::after {
+        left: 26px;
+      }
 
-        .select-input {
-            width: 200px;
-            padding: 10px 14px;
-            border: 1px solid var(--user-center-border);
-            border-radius: 6px;
-            background: var(--user-center-bg);
-            color: var(--user-center-text);
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
+      .select-input {
+        width: 180px;
+        padding: 8px 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #1a1a1a;
+        font-size: 14px;
+        transition: background-color 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+      }
 
-        .user-theme-dark .select-input {
-            background: var(--user-center-bg-dark);
-            border-color: var(--user-center-border-dark);
-            color: var(--user-center-text-dark);
-        }
+      .user-theme-dark .select-input {
+        background: #1e293b;
+        border-color: #374151;
+        color: #ffffff;
+      }
 
-        .select-input:focus {
-            outline: none;
-            border-color: var(--user-center-icon);
-        }
+      .select-input:focus {
+        outline: none;
+        border-color: #4A6DE5;
+        box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.1);
+      }
 
-        .save-btn {
-            background: #4A6DE5;
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .save-btn {
+        background: #4a6de5;
+        color: white;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.5s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+        display: block;
+        width: 100%;
+      }
 
-        .save-btn:hover {
-            background: #3b5bdb;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(74, 109, 229, 0.3);
-        }
+      .save-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
 
-        .back-btn {
-            background: transparent;
-            border: 1px solid var(--user-center-border);
-            color: var(--user-center-text);
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .save-btn:active::after {
+        width: 300px;
+        height: 300px;
+      }
 
-        .user-theme-dark .back-btn {
-            border-color: var(--user-center-border-dark);
-            color: var(--user-center-text-dark);
-        }
+      .save-btn:hover {
+        background: #3b5bdb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 109, 229, 0.3);
+      }
 
-        .back-btn:hover {
-            background: var(--user-center-icon);
-            color: white;
-        }
+      .save-btn:active {
+        transform: translateY(-2px) scale(0.95);
+      }
+
+
     </style>
-</head>
-<body class="light-theme user-theme">
+  </head>
+  <body class="light-theme user-theme">
     <!-- 顶部导航栏 -->
     <div class="header-nav" id="headerNav">
-        <div class="header-left">
-            <button class="back-btn" onclick="window.location.href='user-center.html'">
-                <svg
-                    class="back-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-                        fill="#4A6DE5"
-                    />
-                </svg>
-            </button>
-            <h1 class="logo-text">设置</h1>
-        </div>
-        <div class="header-right">
-        </div>
+      <div class="header-left">
+        <button
+          class="back-btn"
+          onclick="window.location.href='user-center.html'"
+        >
+          <svg
+            class="back-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+              fill="#4A6DE5"
+            />
+          </svg>
+        </button>
+        <h1 class="logo-text">设置</h1>
+      </div>
+      <div class="header-right"></div>
     </div>
 
     <!-- 页面内容 -->
     <div class="page-content">
-        <div class="settings-container">
-            <!-- 主题设置 -->
-            <div class="settings-section">
-                <div class="settings-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="12" cy="12" r="5" fill="#4A6DE5" />
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42z" fill="white"/>
-                    </svg>
-                    <span>主题设置</span>
-                </div>
+      <div class="settings-container">
+        <!-- 主题设置 -->
+        <div class="settings-section">
+          <div class="settings-title">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle cx="12" cy="12" r="5" fill="#4A6DE5" />
+              <path
+                d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42z"
+                fill="white"
+              />
+            </svg>
+            <span>主题设置</span>
+          </div>
 
-                <div class="settings-item">
-                    <div class="settings-label">深色模式</div>
-                    <div class="settings-control">
-                        <div class="toggle-switch" id="darkModeToggle" onclick="toggleDarkMode()">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="settings-item">
-                    <div class="settings-label">字体大小</div>
-                    <div class="settings-control">
-                        <select class="select-input" id="fontSizeSelect" onchange="changeFontSize()">
-                            <option value="14">小</option>
-                            <option value="16">中</option>
-                            <option value="18">大</option>
-                        </select>
-                    </div>
-                </div>
+          <div class="settings-item">
+            <div class="settings-label">深色模式</div>
+            <div class="settings-control">
+              <div
+                class="toggle-switch"
+                id="darkModeToggle"
+                onclick="toggleDarkMode()"
+              ></div>
             </div>
+          </div>
 
-            <!-- 账号设置 -->
-            <div class="settings-section">
-                <div class="settings-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 12c2.21 0 4-1.79 4-4 4s-1.79-4 4-4 4-1.79 4-4 1.79 4 4 4 4 1.79 4 4zm-4 0c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="white"/>
-                    </svg>
-                    <span>账号设置</span>
-                </div>
-
-                <div class="settings-item">
-                    <div class="settings-label">修改密码</div>
-                    <div class="settings-control">
-                        <button class="back-btn" onclick="updatePassword()">修改</button>
-                    </div>
-                </div>
+          <div class="settings-item">
+            <div class="settings-label">字体大小</div>
+            <div class="settings-control">
+              <select
+                class="select-input"
+                id="fontSizeSelect"
+                onchange="changeFontSize()"
+              >
+                <option value="14">小</option>
+                <option value="16">中</option>
+                <option value="18">大</option>
+              </select>
             </div>
-
-            <!-- 隐私设置 -->
-            <div class="settings-section">
-                <div class="settings-title">
-                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 1c1.1 0 2-.9 2-2 2s-.9-2 2-2 2-2 .9-2 2-2zm-4 0c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="white"/>
-                    </svg>
-                    <span>隐私设置</span>
-                </div>
-
-                <div class="settings-item">
-                    <div class="settings-label">清除缓存</div>
-                    <div class="settings-control">
-                        <button class="back-btn" onclick="clearCache()">清除</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 保存按钮 -->
-            <div class="settings-section">
-                <button class="save-btn" onclick="saveSettings()">保存设置</button>
-            </div>
+          </div>
         </div>
+
+        <!-- 账号设置 -->
+        <div class="settings-section">
+          <div class="settings-title">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-4 0c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"
+                fill="white"
+              />
+            </svg>
+            <span>账号设置</span>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-label">修改密码</div>
+            <div class="settings-control">
+              <button class="back-btn" onclick="updatePassword()">修改</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 隐私设置 -->
+        <div class="settings-section">
+          <div class="settings-title">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M12 1c1.1 0 2-.9 2-2s-.9-2-2-2 .9-2 2-2zm-4 0c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"
+                fill="white"
+              />
+            </svg>
+            <span>隐私设置</span>
+          </div>
+
+          <div class="settings-item">
+            <div class="settings-label">清除缓存</div>
+            <div class="settings-control">
+              <button class="back-btn" onclick="clearCache()">清除</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 保存按钮 -->
+        <div class="settings-section">
+          <button class="save-btn" onclick="saveSettings()">保存设置</button>
+        </div>
+      </div>
     </div>
-
-    <!-- 底部导航栏 -->
-    <nav class="modern-footer-nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-item" data-page="index">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">首页</span>
-            </a>
-            <a href="school-category.html" class="nav-item" data-page="school">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5.2 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">学校</span>
-            </a>
-            <a href="forum.html" class="nav-item" data-page="forum">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">论坛</span>
-            </a>
-            <a href="user-center.html" class="nav-item" data-page="user">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M12 12c2.21 0 4-1.79 4-4 4s-1.79-4 4-4 4-1.79 4-4 1.79 4 4 4 1.79 4 4zm-4 0c0-.55-.45-1-1-1h-2c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">我的</span>
-            </a>
-        </div>
-        <div class="nav-indicator"></div>
-    </nav>
 
     <!-- 引入脚本 -->
     <script src="./js/theme.js"></script>
     <script>
-        // 初始化深色模式状态
-        function initDarkMode() {
-            const isDark = localStorage.getItem('settingsDarkMode') === 'true';
-            const toggle = document.getElementById('darkModeToggle');
-            if (isDark) {
-                toggle.classList.add('active');
-                document.body.classList.add('user-theme-dark');
-            }
+      // 初始化深色模式状态
+      function initDarkMode() {
+        const isDark = localStorage.getItem("settingsDarkMode") === "true";
+        const toggle = document.getElementById("darkModeToggle");
+        if (isDark) {
+          toggle.classList.add("active");
+          document.body.classList.add("user-theme-dark");
         }
+      }
 
-        // 切换深色模式
-        function toggleDarkMode() {
-            const toggle = document.getElementById('darkModeToggle');
-            toggle.classList.toggle('active');
-            const isDark = toggle.classList.contains('active');
-            localStorage.setItem('settingsDarkMode', isDark);
+      // 切换深色模式
+      function toggleDarkMode() {
+        const toggle = document.getElementById("darkModeToggle");
+        toggle.classList.toggle("active");
+        const isDark = toggle.classList.contains("active");
+        localStorage.setItem("settingsDarkMode", isDark);
 
-            if (isDark) {
-                document.body.classList.add('user-theme-dark');
-            } else {
-                document.body.classList.remove('user-theme-dark');
-            }
+        if (isDark) {
+          document.body.classList.add("user-theme-dark");
+        } else {
+          document.body.classList.remove("user-theme-dark");
         }
+      }
 
-        // 修改字体大小
-        function changeFontSize() {
-            const select = document.getElementById('fontSizeSelect');
-            const size = select.value;
-            document.documentElement.style.setProperty('--base-font-size', size + 'px');
-            localStorage.setItem('settingsFontSize', size);
+      // 修改字体大小
+      function changeFontSize() {
+        const select = document.getElementById("fontSizeSelect");
+        const size = select.value;
+        document.documentElement.style.setProperty(
+          "--base-font-size",
+          size + "px"
+        );
+        localStorage.setItem("settingsFontSize", size);
+      }
+
+      // 初始化字体大小
+      function initFontSize() {
+        const savedSize = localStorage.getItem("settingsFontSize") || "16";
+        document.documentElement.style.setProperty(
+          "--base-font-size",
+          savedSize + "px"
+        );
+        document.getElementById("fontSizeSelect").value = savedSize;
+      }
+
+      // 修改密码
+      function updatePassword() {
+        window.location.href = "user-center.html";
+      }
+
+      // 清除缓存
+      function clearCache() {
+        if (confirm("确定要清除所有缓存吗？")) {
+          localStorage.clear();
+          alert("缓存已清除！");
         }
+      }
 
-        // 初始化字体大小
-        function initFontSize() {
-            const savedSize = localStorage.getItem('settingsFontSize') || '16';
-            document.documentElement.style.setProperty('--base-font-size', savedSize + 'px');
-            document.getElementById('fontSizeSelect').value = savedSize;
-        }
+      // 保存设置
+      function saveSettings() {
+        alert("设置已保存！");
+      }
 
-        // 修改密码
-        function updatePassword() {
-            window.location.href = 'user-center.html';
-        }
-
-        // 清除缓存
-        function clearCache() {
-            if (confirm('确定要清除所有缓存吗？')) {
-                localStorage.clear();
-                alert('缓存已清除！');
-            }
-        }
-
-        // 保存设置
-        function saveSettings() {
-            alert('设置已保存！');
-        }
-
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            initDarkMode();
-            initFontSize();
-        });
+      // 页面加载完成后初始化
+      document.addEventListener("DOMContentLoaded", function () {
+        initDarkMode();
+        initFontSize();
+      });
     </script>
-</body>
+  </body>
 </html>

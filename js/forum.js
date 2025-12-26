@@ -209,6 +209,9 @@ function initQuestionDetail() {
 function renderQuestionDetail(question) {
     const questionDetailContainer = document.getElementById('questionDetail');
     if (!questionDetailContainer) return;
+    
+    // 更新底部导航栏激活状态
+    updateFooterNav('forum');
 
     questionDetailContainer.innerHTML = `
         <div class="question-detail-header">
@@ -264,6 +267,59 @@ function likeAnswer(answerId) {
         likeCount.textContent = parseInt(likeCount.textContent) + 1;
         likeBtn.classList.add('liked');
     }
+}
+
+// 提交回答
+function submitAnswer() {
+    const answerContent = document.getElementById('answerContent').value.trim();
+    
+    if (!answerContent) {
+        alert('请输入回答内容');
+        return;
+    }
+    
+    // 获取当前问题ID
+    const urlParams = new URLSearchParams(window.location.search);
+    const questionId = parseInt(urlParams.get('id'));
+    
+    if (!questionId) {
+        alert('无法获取问题ID');
+        return;
+    }
+    
+    // 查找问题
+    const question = forumData.questions.find(q => q.id === questionId);
+    if (!question) {
+        alert('问题不存在');
+        return;
+    }
+    
+    // 创建新回答
+    const newAnswer = {
+        id: question.answersList.length + 1,
+        author: {
+            id: 'currentUser',
+            name: '当前用户',
+            avatar: './assets/icon/user-avatar.svg'
+        },
+        content: answerContent,
+        createTime: new Date().toLocaleString('zh-CN'),
+        likes: 0
+    };
+    
+    // 添加到回答列表
+    question.answersList.push(newAnswer);
+    question.answers++;
+    
+    // 清空输入框
+    document.getElementById('answerContent').value = '';
+    document.getElementById('charCount').textContent = '500';
+    
+    // 重新渲染问题详情
+    renderQuestionDetail(question);
+    
+    // 显示成功提示
+    alert('回答提交成功！');
 }
 
 // 初始化提问发布页
@@ -326,3 +382,21 @@ document.addEventListener('DOMContentLoaded', function() {
         initPublishQuestion();
     }
 });
+
+// 更新底部导航栏激活状态
+function updateFooterNav(activePage) {
+    const navItems = document.querySelectorAll('.nav-item');
+    
+    // 移除所有激活状态
+    navItems.forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // 设置当前页面的激活状态
+    navItems.forEach(item => {
+        const page = item.getAttribute('data-page');
+        if (page === activePage) {
+            item.classList.add('active');
+        }
+    });
+}

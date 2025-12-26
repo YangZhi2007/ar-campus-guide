@@ -1,216 +1,533 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>我的提问 - 校园导览</title>
     <link rel="stylesheet" href="./css/global.css" />
     <link rel="stylesheet" href="./css/user-center.css" />
     <style>
-        .questions-list {
-            padding: 20px;
-        }
+      /* 我的提问页面样式 */
+      .questions-container {
+        padding: 16px;
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-        .question-item {
-            background: var(--user-center-card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-            border-bottom: 1px solid var(--user-center-border);
-        }
+      .questions-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 0 4px;
+      }
 
-        .user-theme-dark .question-item {
-            background: var(--user-center-card-bg-dark);
-            border-bottom-color: var(--user-center-border-dark);
-        }
+      .questions-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
 
-        .question-item:hover {
-            background: var(--user-center-icon);
-            opacity: 0.05;
-        }
+      .dark-theme .questions-title {
+        color: #ffffff;
+      }
 
-        .question-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
+      .dark-theme .questions-title svg {
+        color: #ffffff;
+      }
 
-        .question-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--user-center-text);
-            flex: 1;
-        }
+      .dark-theme .questions-title svg path {
+        fill: #ffffff !important;
+      }
 
-        .user-theme-dark .question-title {
-            color: var(--user-center-text-dark);
-        }
+      .questions-count {
+        font-size: 12px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+      }
 
-        .question-meta {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            font-size: 14px;
-            color: var(--user-center-text);
-            opacity: 0.7;
-        }
+      /* 标签切换样式 */
+      .tab-container {
+        display: flex;
+        gap: 12px;
+        margin-top: 50px;
+        margin-bottom: 24px;
+        padding: 0 4px;
+      }
 
-        .user-theme-dark .question-meta {
-            color: var(--user-center-text-dark);
-        }
+      .tab-btn {
+        padding: 10px 24px;
+        border-radius: 24px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: #f5f7fa;
+        color: #6b7280;
+        position: relative;
+        overflow: hidden;
+      }
 
-        .question-content {
-            font-size: 15px;
-            color: var(--user-center-text);
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
+      .tab-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(74, 109, 229, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
 
-        .user-theme-dark .question-content {
-            color: var(--user-center-text-dark);
-        }
+      .tab-btn:active::after {
+        width: 100px;
+        height: 100px;
+      }
 
-        .question-actions {
-            display: flex;
-            gap: 10px;
-        }
+      .tab-btn:hover {
+        background: #e5e7eb;
+        color: #4b5563;
+      }
 
-        .action-link {
-            color: var(--user-center-icon);
-            text-decoration: none;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+      .tab-btn.active {
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(74, 109, 229, 0.25);
+      }
 
-        .action-link:hover {
-            color: #3b5bdb;
-        }
+      .tab-btn:active {
+        transform: scale(0.95);
+      }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--user-center-text);
-            opacity: 0.7;
-        }
+      .user-theme-dark .tab-btn {
+        background: #374151;
+        color: #9ca3af;
+      }
 
-        .user-theme-dark .empty-state {
-            color: var(--user-center-text-dark);
+      .user-theme-dark .tab-btn:hover {
+        background: #4b5563;
+        color: #d1d5db;
+      }
+
+      .user-theme-dark .tab-btn.active {
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(74, 109, 229, 0.35);
+      }
+
+      /* 内容区域样式 */
+      .tab-content {
+        display: none;
+      }
+
+      .tab-content.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+
+      .question-card {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #e5e7eb;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .user-theme-dark .question-card {
+        background: #1e293b;
+        border-color: #374151;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .question-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background: linear-gradient(180deg, #4A6DE5 0%, #6366f1 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .question-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(74, 109, 229, 0.15);
+        border-color: #4A6DE5;
+      }
+
+      .question-card:hover::before {
+        opacity: 1;
+      }
+
+      .question-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 12px;
+      }
+
+      .question-card-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1a1a1a;
+        line-height: 1.4;
+        flex: 1;
+        margin-right: 16px;
+      }
+
+      .user-theme-dark .question-card-title {
+        color: #ffffff;
+      }
+
+      .question-card-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      .question-card-status.pending {
+        background: #fff3e0;
+        color: #ff9800;
+      }
+
+      .question-card-status.answered {
+        background: #e8f5e9;
+        color: #4caf50;
+      }
+
+      .question-card-status.closed {
+        background: #eceff1;
+        color: #607d8b;
+      }
+
+      .question-card-content {
+        font-size: 15px;
+        color: #4b5563;
+        line-height: 1.6;
+        margin-bottom: 16px;
+        opacity: 0.85;
+      }
+
+      .user-theme-dark .question-card-content {
+        color: var(--user-center-text-dark);
+      }
+
+      .question-card-meta {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        font-size: 13px;
+        color: #9ca3af;
+        opacity: 0.6;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      .user-theme-dark .question-card-meta {
+        color: #9ca3af;
+        border-bottom-color: #374151;
+      }
+
+      .question-card-actions {
+        display: flex;
+        gap: 12px;
+        padding-top: 16px;
+      }
+
+      .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .action-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .action-btn:active::after {
+        width: 300px;
+        height: 300px;
+      }
+
+      .action-btn:active {
+        transform: scale(0.95);
+      }
+
+      .action-btn.primary {
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        color: white;
+      }
+
+      .action-btn.primary:hover {
+        background: #3b5bdb;
+        transform: translateY(-1px);
+      }
+
+      .action-btn.secondary {
+        color: #6b7280;
+        opacity: 0.7;
+      }
+
+      .action-btn.secondary:hover {
+        opacity: 1;
+        background: rgba(74, 109, 229, 0.1);
+      }
+
+      .user-theme-dark .action-btn.secondary {
+        color: #d1d5db;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        color: #6b7280;
+        opacity: 0.7;
+      }
+
+      .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        margin: 0 auto 24px;
+        opacity: 0.3;
+      }
+
+      .empty-state-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--user-center-text);
+      }
+
+      .user-theme-dark .empty-state-title {
+        color: var(--user-center-text-dark);
+      }
+
+      .empty-state-desc {
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 24px;
+      }
+
+      .empty-state-btn {
+        display: inline-block;
+        padding: 12px 32px;
+        background: var(--user-center-icon);
+        color: white;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      .empty-state-btn:hover {
+        background: #3b5bdb;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(74, 109, 229, 0.3);
+      }
     </style>
-</head>
-<body class="light-theme user-theme">
+  </head>
+  <body class="light-theme user-theme">
     <!-- 顶部导航栏 -->
     <div class="header-nav" id="headerNav">
-        <div class="header-left">
-            <button class="back-btn" onclick="window.location.href='user-center.html'">
-                <svg
-                    class="back-icon"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 1.41-1.41L7.83 13H20v-2z"
-                        fill="#4A6DE5"
-                    />
-                </svg>
-            </button>
-            <h1 class="logo-text">我的提问</h1>
-        </div>
-        <div class="header-right">
-        </div>
+      <div class="header-left">
+        <button
+          class="back-btn"
+          onclick="window.location.href='user-center.html'"
+        >
+          <svg
+            class="back-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+              fill="#4A6DE5"
+            />
+          </svg>
+        </button>
+        <h1 class="logo-text">我的互动</h1>
+      </div>
+      <div class="header-right"></div>
     </div>
 
     <!-- 页面内容 -->
     <div class="page-content">
-        <div class="questions-list" id="questionsList">
-            <!-- 提问列表将通过JS动态生成 -->
+      <div class="questions-container">
+        <!-- 标签切换 -->
+        <div class="tab-container">
+          <button class="tab-btn active" data-tab="questions">我的提问</button>
+          <button class="tab-btn" data-tab="answers">我的回答</button>
         </div>
-    </div>
 
-    <!-- 底部导航栏 -->
-    <nav class="modern-footer-nav">
-        <div class="nav-container">
-            <a href="index.html" class="nav-item" data-page="index">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">首页</span>
-            </a>
-            <a href="school-category.html" class="nav-item" data-page="school">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72l5 2.73 5-2.73v3.72z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">学校</span>
-            </a>
-            <a href="forum.html" class="nav-item" data-page="forum">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">论坛</span>
-            </a>
-            <a href="user-center.html" class="nav-item" data-page="user">
-                <div class="nav-icon-wrapper">
-                    <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path class="nav-icon-path" d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-1.79 4 4 4 1.79 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                    </svg>
-                </div>
-                <span class="nav-text">我的</span>
-            </a>
+        <!-- 我的提问内容 -->
+        <div id="questionsContent" class="tab-content active">
+          <div class="questions-header">
+            <h2 class="questions-title">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"
+                  fill="currentColor"
+                />
+              </svg>
+              我的提问
+            </h2>
+            <span class="questions-count" id="questionsCount">0 条提问</span>
+          </div>
+          <div id="questionsList">
+            <!-- 提问列表将通过JS动态生成 -->
+          </div>
         </div>
-        <div class="nav-indicator"></div>
-    </nav>
+
+        <!-- 我的回答内容 -->
+        <div id="answersContent" class="tab-content">
+          <div class="questions-header">
+            <h2 class="questions-title">
+              <svg
+                width="28"
+                height="28"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z"
+                  fill="currentColor"
+                />
+              </svg>
+              我的回答
+            </h2>
+            <span class="questions-count" id="answersCount">0 条回答</span>
+          </div>
+          <div id="answersList">
+            <!-- 回答列表将通过JS动态生成 -->
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- 引入脚本 -->
     <script src="./js/theme.js"></script>
     <script src="./js/my-questions.js"></script>
+    <script src="./js/my-answers.js"></script>
     <script src="./js/navigation.js"></script>
     <script>
-        // 更新底部导航栏激活状态
-        function updateFooterNav() {
-            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-            const navItems = document.querySelectorAll('.nav-item');
+      // 标签切换功能
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const tabContents = document.querySelectorAll('.tab-content');
 
-            // 移除所有激活状态
-            navItems.forEach(item => {
-                item.classList.remove('active');
-            });
+      tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const tab = btn.dataset.tab;
 
-            // 设置当前页面的激活状态
-            navItems.forEach(item => {
-                const href = item.getAttribute('href');
-                const page = item.getAttribute('data-page');
+          // 移除所有激活状态
+          tabBtns.forEach(b => b.classList.remove('active'));
+          tabContents.forEach(c => c.classList.remove('active'));
 
-                // 根据页面类型判断
-                if (page === 'index' && (currentPath === 'index.html' || currentPath === '' || currentPath === '/')) {
-                    item.classList.add('active');
-                } else if (page === 'school' && currentPath.includes('school')) {
-                    item.classList.add('active');
-                } else if (page === 'forum' && currentPath.includes('forum')) {
-                    item.classList.add('active');
-                } else if (page === 'user' && currentPath.includes('user')) {
-                    item.classList.add('active');
-                }
-            });
-        }
+          // 添加当前激活状态
+          btn.classList.add('active');
+          document.getElementById(tab + 'Content').classList.add('active');
+        });
+      });
+    </script>
+    <script>
+      // 更新底部导航栏激活状态
+      function updateFooterNav() {
+        const currentPath =
+          window.location.pathname.split("/").pop() || "index.html";
+        const navItems = document.querySelectorAll(".nav-item");
 
-        // 页面加载完成后初始化
-        document.addEventListener('DOMContentLoaded', function() {
-            updateFooterNav();
+        // 移除所有激活状态
+        navItems.forEach((item) => {
+          item.classList.remove("active");
         });
 
-        // 监听路径变化
-        window.addEventListener('popstate', updateFooterNav);
+        // 设置当前页面的激活状态
+        navItems.forEach((item) => {
+          const href = item.getAttribute("href");
+          const page = item.getAttribute("data-page");
+
+          // 根据页面类型判断
+          if (
+            page === "index" &&
+            (currentPath === "index.html" ||
+              currentPath === "" ||
+              currentPath === "/")
+          ) {
+            item.classList.add("active");
+          } else if (page === "school" && currentPath.includes("school")) {
+            item.classList.add("active");
+          } else if (page === "forum" && currentPath.includes("forum")) {
+            item.classList.add("active");
+          } else if (page === "user" && currentPath.includes("user")) {
+            item.classList.add("active");
+          }
+        });
+      }
+
+      // 页面加载完成后初始化
+      document.addEventListener("DOMContentLoaded", function () {
+        updateFooterNav();
+      });
+
+      // 监听路径变化
+      window.addEventListener("popstate", updateFooterNav);
     </script>
-</body>
+  </body>
 </html>

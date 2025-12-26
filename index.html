@@ -274,18 +274,30 @@
     <!-- 顶部导航栏 -->
     <div class="header-nav" id="headerNav">
         <div class="header-left">
-            <svg class="logo" width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                <rect width="32" height="32" rx="4" fill="#4A6DE5"/>
-                <path d="M8 10h16v2H8z" fill="white"/>
-                <path d="M8 15h16v2H8z" fill="white"/>
-                <path d="M8 20h10v2H8z" fill="white"/>
-            </svg>
-            <h1 class="logo-text">校园导览</h1>
-        </div>
-        <div class="header-middle">
-            <input type="text" placeholder="搜索学校/功能" class="search-input">
+            <a href="index.html" class="logo-link">
+                <svg class="logo" width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="28" height="28" rx="6" fill="#4A6DE5"/>
+                    <path d="M7 9h14M7 14h14M7 19h9" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="logo-text">校园导览</span>
+            </a>
         </div>
         <div class="header-right">
+        </div>
+    </div>
+
+    <!-- 搜索栏区块 -->
+    <div class="search-section">
+        <div class="search-input-wrapper">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 0a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm0 10.5a4.5 4.5 0 1 1 0-9 4.5 4.5 0 0 1 0 9zm5.5-1.5a.5.5 0 0 1 .7.7l2.5 2.5a.5.5 0 0 1-.7.7l-2.5-2.5a.5.5 0 0 1-.7-.7l2.5-2.5a.5.5 0 0 1 .7.7z" fill="currentColor"/>
+            </svg>
+            <input type="text" placeholder="搜索学校、功能或内容" class="search-input" id="searchInput">
+            <button class="search-clear" id="searchClear">
+                <svg width="12" height="12" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M6 0a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm2.12 3.88a.38.38 0 0 1 .53.53L6.53 6.53l2.12 2.12a.38.38 0 0 1-.53.53L6 7.06 3.88 9.18a.38.38 0 0 1-.53-.53L5.47 6.53 3.35 4.41a.38.38 0 0 1 .53-.53L6 6l2.12-2.12a.38.38 0 0 1 .53.53z" fill="currentColor"/>
+                </svg>
+            </button>
         </div>
     </div>
     
@@ -314,84 +326,118 @@
                     </svg>
                     <div class="banner-text">学校3 - 精彩介绍</div>
                 </a>
+                <a href="school-detail.html?school=4" class="banner-item">
+                    <svg class="banner-img" width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="800" height="400" fill="#48BB78"/>
+                        <text x="400" y="200" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">学校4</text>
+                    </svg>
+                    <div class="banner-text">学校4 - 精彩介绍</div>
+                </a>
+                <a href="school-detail.html?school=5" class="banner-item">
+                    <svg class="banner-img" width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="800" height="400" fill="#9C27B0"/>
+                        <text x="400" y="200" font-family="Arial, sans-serif" font-size="36" fill="white" text-anchor="middle">学校5</text>
+                    </svg>
+                    <div class="banner-text">学校5 - 精彩介绍</div>
+                </a>
             </div>
             <div class="banner-dots" id="bannerDots"></div>
         </div>
 
-        <!-- 细分板块 -->
-        <div class="section-container">
-            <a href="school-category.html?category=ar" class="section-card">
-                <svg class="section-icon" width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="25" fill="#4A6DE5"/>
-                    <text x="25" y="32" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle">AR</text>
-                </svg>
-                <h3 class="section-title">AR导览</h3>
-                <p class="section-desc">增强现实校园导览</p>
+        <!-- 功能导航区域 -->
+        <div class="features-container">
+            <!-- AR导览 -->
+            <a href="school-category.html?category=ar" class="feature-card ar-feature">
+                <div class="feature-icon-wrapper">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#4A6DE5"/>
+                        <path d="M8 12h24M20 8v24" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="20" r="6" stroke="white" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">AR导览</h3>
+                    <p class="feature-desc">增强现实校园导览，沉浸式探索校园</p>
+                    <div class="feature-stats">
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg> 50+ 学校</span>
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="currentColor"/></svg> 热门功能</span>
+                    </div>
+                </div>
             </a>
-            <a href="school-category.html?category=vr" class="section-card">
-                <svg class="section-icon" width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="25" fill="#2196F3"/>
-                    <text x="25" y="32" font-family="Arial, sans-serif" font-size="16" fill="white" text-anchor="middle">VR</text>
-                </svg>
-                <h3 class="section-title">VR全景</h3>
-                <p class="section-desc">虚拟现实全景体验</p>
+
+            <!-- VR全景 -->
+            <a href="school-category.html?category=vr" class="feature-card vr-feature">
+                <div class="feature-icon-wrapper">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#2196F3"/>
+                        <path d="M8 12h24M8 20h24M8 28h24" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="20" r="10" stroke="white" stroke-width="2" fill="none"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">VR全景</h3>
+                    <p class="feature-desc">360°全景体验，足不出户逛校园</p>
+                    <div class="feature-stats">
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg> 100+ 场景</span>
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="currentColor"/></svg> 高清画质</span>
+                    </div>
+                </div>
             </a>
-            <a href="school-category.html?category=map" class="section-card">
-                <svg class="section-icon" width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="25" fill="#FF9800"/>
-                    <path d="M15 15h20v20H15z" fill="none" stroke="white" stroke-width="2"/>
-                    <path d="M15 25h20M25 15v20" stroke="white" stroke-width="2"/>
-                </svg>
-                <h3 class="section-title">校园地图</h3>
-                <p class="section-desc">交互式校园地图</p>
+
+            <!-- 校园地图 -->
+            <a href="school-category.html?category=map" class="feature-card map-feature">
+                <div class="feature-icon-wrapper">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#FF9800"/>
+                        <path d="M10 10h20v20H10z" fill="none" stroke="white" stroke-width="2.5"/>
+                        <path d="M10 20h20M20 10v20" stroke="white" stroke-width="2.5"/>
+                        <circle cx="20" cy="20" r="3" fill="white"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">校园地图</h3>
+                    <p class="feature-desc">智能导航系统，精准定位目的地</p>
+                    <div class="feature-stats">
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg> 实时定位</span>
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="currentColor"/></svg> 路线规划</span>
+                    </div>
+                </div>
             </a>
-            <a href="school-category.html?category=info" class="section-card">
-                <svg class="section-icon" width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="25" cy="25" r="25" fill="#48BB78"/>
-                    <path d="M25 12v6M25 22v16" stroke="white" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-                <h3 class="section-title">校园信息</h3>
-                <p class="section-desc">校园最新资讯</p>
+
+            <!-- 校园信息 -->
+            <a href="school-category.html?category=info" class="feature-card info-feature">
+                <div class="feature-icon-wrapper">
+                    <svg class="feature-icon" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#48BB78"/>
+                        <path d="M12 10h16M12 20h16M12 30h16" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                        <circle cx="20" cy="20" r="2" fill="white"/>
+                    </svg>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">校园信息</h3>
+                    <p class="feature-desc">最新资讯动态，掌握校园脉搏</p>
+                    <div class="feature-stats">
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" fill="currentColor"/></svg> 每日更新</span>
+                        <span class="stat-item"><svg width="14" height="14" viewBox="0 0 24 24"><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-4 6V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10c.55 0 1-.45 1-1z" fill="currentColor"/></svg> 多维度信息</span>
+                    </div>
+                </div>
             </a>
         </div>
 
-        <!-- 设施入口 -->
-        <div class="campus-list">
-            <!-- 校门卡片 -->
-            <div class="campus-item">
-                <h3>1. 校门</h3>
-                <p>校园主入口，紧邻地铁2号线，设有访客登记处</p>
-                <div class="btn-group">
-                    <button class="btn btn-ar" onclick="window.location.href='ar-navigation.html?spot=gate'">AR导航</button>
-                    <button class="btn btn-vr" onclick="window.location.href='vr-panorama.html?spot=gate'">VR全景</button>
-                </div>
-            </div>
+
+
             
-            <!-- 主教学楼卡片 -->
-            <div class="campus-item">
-                <h3>2. 主教学楼</h3>
-                <p>计算机学院、文学院所在地，配备多媒体教室</p>
-                <div class="btn-group">
-                    <button class="btn btn-ar" onclick="window.location.href='ar-navigation.html?spot=building'">AR导航</button>
-                    <button class="btn btn-vr" onclick="window.location.href='vr-panorama.html?spot=building'">VR全景</button>
-                </div>
-            </div>
+
             
-            <!-- 图书馆卡片 -->
-            <div class="campus-item">
-                <h3>3. 图书馆</h3>
-                <p>馆藏图书100万+，提供自习室、电子阅览室</p>
-                <div class="btn-group">
-                    <button class="btn btn-ar" onclick="window.location.href='ar-navigation.html?spot=library'">AR导航</button>
-                    <button class="btn btn-vr" onclick="window.location.href='vr-panorama.html?spot=library'">VR全景</button>
-                </div>
-            </div>
-        </div>
+
     </div>
     
     <!-- 底部导航栏 -->
     <nav class="modern-footer-nav">
         <div class="nav-container">
+            <!-- 首页导航项 -->
+            <!-- 素材替换方案：将SVG替换为<img>标签，使用真实图标 -->
+            <!-- 示例：<img src="assets/icon/home.png" alt="首页" class="nav-icon"> -->
             <a href="index.html" class="nav-item" data-page="index">
                 <div class="nav-icon-wrapper">
                     <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -400,6 +446,9 @@
                 </div>
                 <span class="nav-text">首页</span>
             </a>
+            <!-- 学校导航项 -->
+            <!-- 素材替换方案：将SVG替换为<img>标签，使用真实图标 -->
+            <!-- 示例：<img src="assets/icon/school.png" alt="学校" class="nav-icon"> -->
             <a href="school-category.html" class="nav-item" data-page="school">
                 <div class="nav-icon-wrapper">
                     <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -408,6 +457,9 @@
                 </div>
                 <span class="nav-text">学校</span>
             </a>
+            <!-- 论坛导航项 -->
+            <!-- 素材替换方案：将SVG替换为<img>标签，使用真实图标 -->
+            <!-- 示例：<img src="assets/icon/forum.png" alt="论坛" class="nav-icon"> -->
             <a href="forum.html" class="nav-item" data-page="forum">
                 <div class="nav-icon-wrapper">
                     <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -416,6 +468,9 @@
                 </div>
                 <span class="nav-text">论坛</span>
             </a>
+            <!-- 我的导航项 -->
+            <!-- 素材替换方案：将SVG替换为<img>标签，使用真实图标 -->
+            <!-- 示例：<img src="assets/icon/user.png" alt="我的" class="nav-icon"> -->
             <a href="user-center.html" class="nav-item" data-page="user">
                 <div class="nav-icon-wrapper">
                     <svg class="nav-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -433,6 +488,35 @@
     <script src="./js/search.js"></script>
     <script src="./js/navigation.js"></script>
     <script src="./js/footer.js"></script>
+    <script>
+        // 搜索栏交互
+        const searchInput = document.getElementById('searchInput');
+        const searchClear = document.getElementById('searchClear');
+
+        // 回车搜索
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    performSearch(query);
+                }
+            }
+        });
+
+        // 清除搜索内容
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchInput.focus();
+        });
+
+        // 执行搜索
+        function performSearch(query) {
+            // 这里可以实现实际的搜索逻辑
+            console.log('搜索:', query);
+            // 示例：跳转到搜索结果页面
+            // window.location.href = `search-results.html?q=${encodeURIComponent(query)}`;
+        }
+    </script>
     <script>
         // 更新底部导航栏激活状态
         function updateFooterNav() {

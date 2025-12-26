@@ -12,6 +12,9 @@
     <!-- 顶部导航栏 -->
     <div class="header-nav" id="headerNav">
       <div class="header-left">
+        <!-- 返回按钮 -->
+        <!-- 素材替换方案：将SVG替换为<img>标签，使用真实图标 -->
+        <!-- 示例：<img src="assets/icon/back.png" alt="返回" class="back-icon"> -->
         <button class="back-btn" onclick="window.location.href='index.html'">
           <svg
             class="back-icon"
@@ -36,15 +39,14 @@
       <div class="school-category-container">
         <!-- 筛选区域 -->
         <div class="category-filter">
-          <div class="filter-section">
-            <h2 class="filter-title">按地区筛选</h2>
+          <div class="filter-header">
+            <div class="filter-label">地区</div>
             <div class="filter-options" id="regionFilter">
               <!-- 地区选项将通过JS动态生成 -->
             </div>
           </div>
-
-          <div class="filter-section">
-            <h2 class="filter-title">按类型筛选</h2>
+          <div class="filter-header">
+            <div class="filter-label">类型</div>
             <div class="filter-options" id="typeFilter">
               <!-- 类型选项将通过JS动态生成 -->
             </div>

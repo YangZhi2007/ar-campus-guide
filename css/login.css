@@ -5,26 +5,26 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: var(--padding-lg);
 }
 
 .login-card {
     width: 100%;
     max-width: 400px;
-    padding: 30px;
+    padding: var(--padding-xl);
     text-align: center;
 }
 
 .login-title {
     color: var(--primary-color);
-    margin-bottom: 30px;
+    margin-bottom: var(--padding-xl);
     font-size: 24px;
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--padding-lg);
 }
 
 .form-item {
@@ -34,9 +34,9 @@
 .form-item input {
     width: 100%;
     height: 48px;
-    padding: 0 16px;
+    padding: 0 var(--padding-md);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     background-color: var(--bg-color);
     color: var(--text-color);
     font-size: 16px;
@@ -58,13 +58,13 @@
 }
 
 .remember-label input {
-    margin-right: 8px;
+    margin-right: var(--padding-sm);
 }
 
 .login-btn {
     width: 100%;
     height: 48px;
-    margin-top: 10px;
+    margin-top: var(--padding-sm);
     font-size: 16px;
     font-weight: 500;
 }
@@ -79,11 +79,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: var(--padding-xl);
 }
 
 .login-logo {
-    margin-bottom: 15px;
+    margin-bottom: var(--padding-md);
 }
 
 /* 输入框包装器样式 */

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的发布 - 校园导览</title>
+    <link rel="stylesheet" href="./css/global.css" />
+    <link rel="stylesheet" href="./css/user-center.css" />
+    <style>
+      /* 我的发布页面样式 */
+      .publish-container {
+        padding: 20px;
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      .publish-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 50px;
+        margin-bottom: 24px;
+        padding: 0 8px;
+      }
+
+      .publish-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #1a1a1a;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: -0.5px;
+      }
+
+      .dark-theme .publish-title {
+        color: #ffffff;
+      }
+
+      .dark-theme .publish-title svg {
+        color: #ffffff;
+      }
+
+      .dark-theme .publish-title svg path {
+        fill: #ffffff !important;
+      }
+
+      .publish-count {
+        font-size: 13px;
+        color: #ffffff;
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        padding: 6px 16px;
+        border-radius: 24px;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(74, 109, 229, 0.2);
+      }
+
+      .publish-card {
+        background: #ffffff;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid #f0f0f0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .user-theme-dark .publish-card {
+        background: #1e293b;
+        border-color: #374151;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      }
+
+      .publish-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #4A6DE5 0%, #6366f1 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .publish-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(74, 109, 229, 0.2);
+        border-color: #4A6DE5;
+      }
+
+      .publish-card:hover::before {
+        opacity: 1;
+      }
+
+      .publish-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .user-theme-dark .publish-card-header {
+        border-bottom-color: #374151;
+      }
+
+      .publish-card-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1a1a1a;
+        line-height: 1.5;
+        flex: 1;
+        margin-right: 16px;
+        letter-spacing: -0.3px;
+      }
+
+      .user-theme-dark .publish-card-title {
+        color: #ffffff;
+      }
+
+      .publish-card-status {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      .publish-card-status.public {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: #ffffff;
+      }
+
+      .publish-card-status.private {
+        background: #f7fafc;
+        color: #4a5568;
+        border: 1px solid #e2e8f0;
+      }
+
+      .user-theme-dark .publish-card-status.private {
+        background: #2d3748;
+        color: #cbd5e0;
+        border-color: #4a5568;
+      }
+
+      .publish-card-content {
+        font-size: 16px;
+        color: #4b5563;
+        line-height: 1.8;
+        margin-bottom: 20px;
+        opacity: 0.9;
+        padding: 16px;
+        background: #f9fafb;
+        border-radius: 12px;
+        border-left: 3px solid #4A6DE5;
+      }
+
+      .user-theme-dark .publish-card-content {
+        color: #d1d5db;
+        background: #374151;
+        border-left-color: #6366f1;
+      }
+
+      .publish-card-meta {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        font-size: 14px;
+        color: #9ca3af;
+        padding-bottom: 16px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .user-theme-dark .publish-card-meta {
+        color: #9ca3af;
+        border-bottom-color: #374151;
+      }
+
+      .publish-card-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .publish-card-actions {
+        display: flex;
+        gap: 12px;
+        padding-top: 20px;
+      }
+
+      .action-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: none;
+        background: transparent;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .action-btn::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+      }
+
+      .action-btn:active::after {
+        width: 300px;
+        height: 300px;
+      }
+
+      .action-btn:active {
+        transform: scale(0.95);
+      }
+
+      .action-btn.primary {
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        color: white;
+        box-shadow: 0 4px 12px rgba(74, 109, 229, 0.25);
+      }
+
+      .action-btn.primary:hover {
+        background: linear-gradient(135deg, #3b5bdb 0%, #5a67d8 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(74, 109, 229, 0.35);
+      }
+
+      .action-btn.secondary {
+        color: #6b7280;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+      }
+
+      .action-btn.secondary:hover {
+        color: #4A6DE5;
+        background: rgba(74, 109, 229, 0.08);
+        border-color: #4A6DE5;
+        transform: translateY(-1px);
+      }
+
+      .user-theme-dark .action-btn.secondary {
+        color: #d1d5db;
+        background: #374151;
+        border-color: #4a5568;
+      }
+
+      .user-theme-dark .action-btn.secondary:hover {
+        color: #6366f1;
+        background: rgba(99, 102, 241, 0.15);
+        border-color: #6366f1;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 100px 20px;
+        color: #6b7280;
+      }
+
+      .empty-state-icon {
+        width: 140px;
+        height: 140px;
+        margin: 0 auto 32px;
+        opacity: 0.25;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+      }
+
+      .empty-state-title {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 16px;
+        color: #1a1a1a;
+        letter-spacing: -0.3px;
+      }
+
+      .user-theme-dark .empty-state-title {
+        color: #ffffff;
+      }
+
+      .empty-state-desc {
+        font-size: 16px;
+        margin-bottom: 32px;
+        color: #6b7280;
+        line-height: 1.6;
+      }
+
+      .empty-state-btn {
+        display: inline-block;
+        padding: 12px 32px;
+        background: linear-gradient(135deg, #4A6DE5 0%, #6366f1 100%);
+        color: white;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 12px rgba(74, 109, 229, 0.25);
+      }
+
+      .empty-state-btn:hover {
+        background: linear-gradient(135deg, #3b5bdb 0%, #5a67d8 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(74, 109, 229, 0.35);
+      }
+    </style>
+  </head>
+  <body class="light-theme user-theme">
+    <!-- 顶部导航栏 -->
+    <div class="header-nav" id="headerNav">
+      <div class="header-left">
+        <button
+          class="back-btn"
+          onclick="window.location.href='user-center.html'"
+        >
+          <svg
+            class="back-icon"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+              fill="#4A6DE5"
+            />
+          </svg>
+        </button>
+        <h1 class="logo-text">我的发布</h1>
+      </div>
+      <div class="header-right"></div>
+    </div>
+
+    <!-- 页面内容 -->
+    <div class="page-content">
+      <div class="publish-container">
+        <div class="publish-header">
+          <h2 class="publish-title">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                fill="currentColor"
+              />
+            </svg>
+            我的发布
+          </h2>
+          <span class="publish-count" id="publishCount">0 条发布</span>
+        </div>
+        <div id="publishList">
+          <!-- 发布记录将通过JS动态生成 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 引入脚本 -->
+    <script src="./js/theme.js"></script>
+    <script src="./js/my-publish.js"></script>
+    <script src="./js/navigation.js"></script>
+  </body>
+</html>

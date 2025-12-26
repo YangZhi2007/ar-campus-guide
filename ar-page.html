@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR校园导览</title>
+    <link rel="stylesheet" href="./css/global.css" />
+    <!-- 引入AR.js和A-Frame库 -->
+    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/2.1.5/aframe/build/aframe-ar.js"></script>
+    <style>
+      /* AR页面特定样式 */
+      body {
+        margin: 0;
+        overflow: hidden;
+        font-family: "Microsoft YaHei", sans-serif;
+      }
+
+      #ar-container {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+      }
+
+      #loading-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        color: white;
+        flex-direction: column;
+      }
+
+      .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        margin-bottom: 20px;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .error-message {
+        background-color: rgba(255, 0, 0, 0.7);
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+        margin-top: 20px;
+        max-width: 80%;
+        text-align: center;
+        display: none;
+      }
+
+      .ar-controls {
+        position: fixed;
+        bottom: 80px;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .ar-button {
+        background-color: rgba(74, 109, 229, 0.8);
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .ar-info {
+        position: fixed;
+        top: 20px;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        text-align: center;
+      }
+
+      .info-card {
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 15px;
+        font-size: 14px;
+        max-width: 300px;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        display: none;
+      }
+
+      .location-info {
+        position: fixed;
+        top: 20px;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        text-align: center;
+      }
+
+      .location-card {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: #333;
+        padding: 10px 20px;
+        border-radius: 15px;
+        font-size: 16px;
+        max-width: 300px;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        display: none;
+      }
+
+      .back-button {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        background-color: rgba(74, 109, 229, 0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        text-align: center;
+        z-index: 100;
+      }
+
+      .back-button a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      .marker-hint {
+        position: fixed;
+        bottom: 20px;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        text-align: center;
+      }
+
+      .hint-card {
+        background-color: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 15px;
+        font-size: 14px;
+        max-width: 300px;
+        margin: 0 auto;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      @media (max-width: 768px) {
+        .ar-controls {
+          bottom: 60px;
+          gap: 10px;
+        }
+
+        .ar-button {
+          padding: 8px 12px;
+          font-size: 12px;
+        }
+
+        .info-card,
+        .location-card,
+        .hint-card {
+          max-width: 80%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ar-container">
+      <div id="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>正在初始化AR场景...</p>
+        <div class="error-message" id="error-message">
+          加载失败，请刷新页面重试
+        </div>
+      </div>
+
+      <!-- AR场景 -->
+      <a-scene
+        embedded
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      >
+        <!-- 校门标记 -->
+        <a-marker preset="hiro" id="gate-marker">
+          <a-entity position="0 0.5 0" rotation="-90 0 0">
+            <a-text
+              value="校门"
+              color="#333"
+              width="3"
+              position="0 0.5 0"
+              align="center"
+            ></a-text>
+            <a-box
+              position="0 0 0"
+              width="1.5"
+              height="0.1"
+              depth="1.5"
+              color="#4a6de5"
+            ></a-box>
+            <a-cylinder
+              position="0 0.5 0"
+              radius="0.1"
+              height="1"
+              color="#ff5722"
+            ></a-cylinder>
+            <a-sphere
+              position="0 1.2 0"
+              radius="0.2"
+              color="#ffc107"
+            ></a-sphere>
+          </a-entity>
+        </a-marker>
+
+        <!-- 主教学楼标记 -->
+        <a-marker
+          preset="custom"
+          type="pattern"
+          url="./assets/marker/building.patt"
+          id="building-marker"
+        >
+          <a-entity position="0 0.5 0">
+            <a-text
+              value="主教学楼"
+              color="#333"
+              width="3"
+              position="0 0.5 0"
+              align="center"
+            ></a-text>
+            <a-box
+              position="0 0 0"
+              width="1.5"
+              height="0.1"
+              depth="1.5"
+              color="#2196f3"
+            ></a-box>
+            <a-cylinder
+              position="0 0.5 0"
+              radius="0.1"
+              height="1"
+              color="#ff5722"
+            ></a-cylinder>
+            <a-sphere
+              position="0 1.2 0"
+              radius="0.2"
+              color="#ffc107"
+            ></a-sphere>
+          </a-entity>
+        </a-marker>
+
+        <!-- 图书馆标记 -->
+        <a-marker
+          preset="custom"
+          type="pattern"
+          url="./assets/marker/library.patt"
+          id="library-marker"
+        >
+          <a-entity position="0 0.5 0">
+            <a-text
+              value="图书馆"
+              color="#333"
+              width="3"
+              position="0 0.5 0"
+              align="center"
+            ></a-text>
+            <a-box
+              position="0 0 0"
+              width="1.5"
+              height="0.1"
+              depth="1.5"
+              color="#34a853"
+            ></a-box>
+            <a-cylinder
+              position="0 0.5 0"
+              radius="0.1"
+              height="1"
+              color="#ff5722"
+            ></a-cylinder>
+            <a-sphere
+              position="0 1.2 0"
+              radius="0.2"
+              color="#ffc107"
+            ></a-sphere>
+          </a-entity>
+        </a-marker>
+
+        <!-- 体育馆标记 -->
+        <a-marker
+          preset="custom"
+          type="pattern"
+          url="./assets/marker/gym.patt"
+          id="gym-marker"
+        >
+          <a-entity position="0 0.5 0">
+            <a-text
+              value="体育馆"
+              color="#333"
+              width="3"
+              position="0 0.5 0"
+              align="center"
+            ></a-text>
+            <a-box
+              position="0 0 0"
+              width="1.5"
+              height="0.1"
+              depth="1.5"
+              color="#ff9800"
+            ></a-box>
+            <a-cylinder
+              position="0 0.5 0"
+              radius="0.1"
+              height="1"
+              color="#ff5722"
+            ></a-cylinder>
+            <a-sphere
+              position="0 1.2 0"
+              radius="0.2"
+              color="#ffc107"
+            ></a-sphere>
+          </a-entity>
+        </a-marker>
+
+        <!-- 食堂标记 -->
+        <a-marker
+          preset="custom"
+          type="pattern"
+          url="./assets/marker/canteen.patt"
+          id="canteen-marker"
+        >
+          <a-entity position="0 0.5 0">
+            <a-text
+              value="食堂"
+              color="#333"
+              width="3"
+              position="0 0.5 0"
+              align="center"
+            ></a-text>
+            <a-box
+              position="0 0 0"
+              width="1.5"
+              height="0.1"
+              depth="1.5"
+              color="#f44336"
+            ></a-box>
+            <a-cylinder
+              position="0 0.5 0"
+              radius="0.1"
+              height="1"
+              color="#ff5722"
+            ></a-cylinder>
+            <a-sphere
+              position="0 1.2 0"
+              radius="0.2"
+              color="#ffc107"
+            ></a-sphere>
+          </a-entity>
+        </a-marker>
+
+        <a-entity camera></a-entity>
+      </a-scene>
+
+      <!-- 返回按钮 -->
+      <div class="back-button">
+        <a href="school-detail.html?school={{schoolId}}">返回</a>
+      </div>
+
+      <!-- AR控制按钮 -->
+      <div class="ar-controls">
+        <button class="ar-button" id="toggle-camera">切换摄像头</button>
+        <button class="ar-button" id="take-photo">拍照</button>
+      </div>
+
+      <!-- 信息提示 -->
+      <div class="ar-info">
+        <div class="info-card" id="info-card"></div>
+      </div>
+
+      <!-- 位置信息 -->
+      <div class="location-info">
+        <div class="location-card" id="location-card"></div>
+      </div>
+
+      <!-- 标记提示 -->
+      <div class="marker-hint">
+        <div class="hint-card">请将摄像头对准标记以查看AR内容</div>
+      </div>
+    </div>
+
+
+
+    <!-- 引入脚本 -->
+    <script src="./js/theme.js"></script>
+    <script src="./js/school-data.js"></script>
+    <script src="./js/national-universities-data.js"></script>
+    <script src="./js/national-universities-loader-optimized.js"></script>
+    <script src="./js/school.js"></script>
+    <script>
+      // 初始化AR页面
+      async function initARPage() {
+        try {
+          // 获取URL参数
+          const urlParams = new URLSearchParams(window.location.search);
+          const schoolId = urlParams.get('school');
+          const facilityId = urlParams.get('facility');
+
+          // 如果没有学校ID，返回学校列表页
+          if (!schoolId) {
+            window.location.href = 'school-category.html';
+            return;
+          }
+
+          // 加载学校数据
+          await loadSchoolData();
+
+          // 查找学校
+          const school = schoolData.find(s => s.id === schoolId);
+          if (!school) {
+            window.location.href = 'school-category.html';
+            return;
+          }
+
+          // 更新返回按钮链接
+          const backButton = document.querySelector('.back-button a');
+          if (backButton) {
+            backButton.href = `school-detail.html?school=${schoolId}`;
+          }
+
+          // 更新位置信息
+          const locationCard = document.getElementById('location-card');
+          if (locationCard) {
+            locationCard.textContent = school.name;
+            locationCard.style.display = 'block';
+          }
+
+          // 如果有设施ID，显示设施信息
+          if (facilityId) {
+            const facility = school.facilities.find(f => f.id === facilityId);
+            if (facility) {
+              const infoCard = document.getElementById('info-card');
+              if (infoCard) {
+                infoCard.textContent = facility.name;
+                infoCard.style.display = 'block';
+              }
+            }
+          }
+
+          // 隐藏加载屏幕
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            loadingScreen.style.display = 'none';
+          }
+        } catch (error) {
+          console.error('初始化AR页面失败:', error);
+          const errorMessage = document.getElementById('error-message');
+          if (errorMessage) {
+            errorMessage.style.display = 'block';
+          }
+        }
+      }
+
+      // 页面加载完成后初始化
+      document.addEventListener('DOMContentLoaded', function() {
+        // 检查AR.js是否加载成功
+        if (typeof ARjs === 'undefined') {
+          const errorMessage = document.getElementById('error-message');
+          if (errorMessage) {
+            errorMessage.textContent = 'AR.js加载失败，请检查网络连接';
+            errorMessage.style.display = 'block';
+          }
+          return;
+        }
+
+        initARPage();
+      });
+
+      // 切换摄像头
+      document.getElementById('toggle-camera').addEventListener('click', function() {
+        // 这里可以实现摄像头切换逻辑
+        alert('摄像头切换功能');
+      });
+
+      // 拍照功能
+      document.getElementById('take-photo').addEventListener('click', function() {
+        // 这里可以实现拍照功能
+        alert('拍照功能');
+      });
+    </script>
+  </body>
+</html>

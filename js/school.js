@@ -191,6 +191,8 @@ function renderSchoolList(schools) {
         return;
     }
 
+    // 素材替换方案：学校图片可以通过修改schoolData中的image字段来替换
+    // 示例：image: 'assets/school/school-1.jpg'
     schoolListContainer.innerHTML = schools.map(school => `
         <div class="school-card" data-id="${school.id}">
             <img src="${school.image}" alt="${school.name}" class="school-image">
