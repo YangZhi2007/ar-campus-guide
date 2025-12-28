@@ -17,14 +17,30 @@
 
 .login-title {
     color: var(--primary-color);
-    margin-bottom: var(--padding-xl);
+    margin-bottom: var(--padding-sm);
     font-size: 24px;
+    font-weight: 600;
+}
+
+.login-subtitle {
+    color: var(--text-color);
+    margin-bottom: var(--padding-xl);
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: var(--padding-lg);
+    gap: 20px;
 }
 
 .form-item {
@@ -39,13 +55,15 @@
     border-radius: var(--border-radius);
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-size: 16px;
-    transition: border-color 0.3s;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .form-item input:focus {
     border-color: var(--primary-color);
     outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 109, 229, 0.1), 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .remember-label {
@@ -66,7 +84,20 @@
     height: 48px;
     margin-top: var(--padding-sm);
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(74, 109, 229, 0.3);
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 109, 229, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(74, 109, 229, 0.3);
 }
 
 /* 暗夜模式适配 */
@@ -165,8 +196,8 @@
 /* 表单操作区域样式 */
 .form-actions {
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 .forgot-password,
@@ -220,4 +251,73 @@
 
 .social-btn:hover .social-icon path {
     fill: white;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .login-card {
+        padding: var(--padding-lg);
+    }
+    
+    .login-title {
+        font-size: 22px;
+    }
+    
+    .login-subtitle {
+        font-size: 13px;
+    }
+    
+    .form-label {
+        font-size: 13px;
+    }
+    
+    .form-item input {
+        font-size: 14px;
+        height: 44px;
+    }
+    
+    .login-btn {
+        font-size: 15px;
+        height: 44px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: var(--padding-md);
+    }
+    
+    .login-card {
+        padding: var(--padding-md);
+    }
+    
+    .login-title {
+        font-size: 20px;
+    }
+    
+    .login-subtitle {
+        font-size: 12px;
+    }
+    
+    .form-label {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+    
+    .form-item input {
+        font-size: 14px;
+        height: 42px;
+    }
+    
+    .login-btn {
+        font-size: 14px;
+        height: 42px;
+    }
+    
+    .input-icon,
+    .eye-icon {
+        width: 18px;
+        height: 18px;
+    }
+}
 }

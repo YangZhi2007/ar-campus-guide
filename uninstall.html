@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>卸载应用 - 校园导览</title>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/uninstall.css">
+</head>
+<body class="light-theme">
+    <div class="uninstall-container">
+        <div class="uninstall-header">
+            <svg class="warning-icon" width="80" height="80" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" fill="#ff4d4f"/>
+            </svg>
+            <h1>卸载应用</h1>
+            <p class="warning-text">此操作将清除所有本地数据并卸载应用</p>
+        </div>
+
+        <div class="uninstall-content">
+            <div class="progress-section">
+                <h2>卸载进度</h2>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">准备卸载...</div>
+            </div>
+
+            <div class="data-section">
+                <h2>将清除以下数据</h2>
+                <ul class="data-list">
+                    <li class="data-item">
+                        <svg class="data-icon" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#4CAF50"/>
+                        </svg>
+                        <span>LocalStorage 数据</span>
+                    </li>
+                    <li class="data-item">
+                        <svg class="data-icon" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#4CAF50"/>
+                        </svg>
+                        <span>SessionStorage 数据</span>
+                    </li>
+                    <li class="data-item">
+                        <svg class="data-icon" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#4CAF50"/>
+                        </svg>
+                        <span>IndexedDB 数据</span>
+                    </li>
+                    <li class="data-item">
+                        <svg class="data-icon" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" fill="#4CAF50"/>
+                        </svg>
+                        <span>Cookies 数据</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="uninstall-footer">
+            <button class="cancel-btn" onclick="window.location.href='user-center.html'">取消卸载</button>
+            <button class="confirm-btn" onclick="startUninstall()">确认卸载</button>
+        </div>
+    </div>
+
+    <script src="./js/uninstall.js"></script>
+</body>
+</html>

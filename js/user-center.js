@@ -117,6 +117,16 @@ function logout() {
     }
 }
 
+// 确认卸载
+function confirmUninstall() {
+    if (confirm('警告：此操作将清除所有本地数据并卸载应用！\n\n确定要继续吗？')) {
+        if (confirm('再次确认：卸载后无法恢复数据！\n\n真的要卸载应用吗？')) {
+            // 跳转到卸载页面
+            window.location.href = 'uninstall.html';
+        }
+    }
+}
+
 // 页面加载完成后检查登录状态和初始化主题
 document.addEventListener('DOMContentLoaded', function() {
     checkLoginStatus();
