@@ -502,6 +502,24 @@
         // 这里可以实现拍照功能
         alert('拍照功能');
       });
+
+      // 初始化AI智能问答助手
+      document.addEventListener('DOMContentLoaded', function() {
+        window.aiAssistant = new AIAssistant({
+          barWidth: 28,
+          barHeight: 80,
+          barCollapsedHeight: 20,
+          barMargin: 4,
+          windowWidth: 260,
+          windowMinHeight: 120,
+          windowMaxHeight: 220,
+          autoHideDelay: 10000
+        });
+      });
     </script>
+    
+    <!-- AI智能问答助手组件 -->
+    <link rel="stylesheet" href="./css/ai-assistant.css">
+    <script src="./js/ai-assistant.js"></script>
   </body>
 </html>

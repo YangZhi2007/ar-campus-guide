@@ -1,0 +1,295 @@
+
+/* AI智能问答助手样式 */
+:root {
+  --ai-primary-color: #3577F0;
+  --ai-secondary-color: #5A91F5;
+  --ai-bg-color: rgba(255, 255, 255, 0.9);
+  --ai-text-color: #333333;
+  --ai-border-radius: 12px;
+  --ai-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 边缘吸附长竖条样式 */
+.ai-assistant-bar {
+  position: fixed;
+  width: 10px;
+  height: 80px;
+  background: linear-gradient(180deg, var(--ai-primary-color), var(--ai-secondary-color));
+  border-radius: 14px;
+  z-index: 9999;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--ai-shadow);
+}
+
+/* 竖条激活状态 */
+.ai-assistant-bar:hover,
+.ai-assistant-bar.active {
+  opacity: 1;
+  animation: breathe 0.2s ease-in-out;
+}
+
+/* 呼吸动画 */
+@keyframes breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* 竖条图标 */
+.ai-assistant-bar-icon {
+  width: 16px;
+  height: 16px;
+  fill: white;
+}
+
+/* 迷你窗口样式 */
+.ai-assistant-window {
+  position: fixed;
+  width: 260px;
+  min-height: 120px;
+  max-height: 220px;
+  background: var(--ai-bg-color);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: var(--ai-border-radius);
+  box-shadow: var(--ai-shadow);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  opacity: 0;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+/* 窗口显示状态 */
+.ai-assistant-window.show {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+/* 拖动条 */
+.ai-assistant-drag-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.05);
+  cursor: move;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ai-assistant-drag-bar::after {
+  content: "";
+  width: 40px;
+  height: 3px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+}
+
+/* 输入区 */
+.ai-assistant-input-area {
+  height: 40px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-assistant-mic-icon {
+  width: 20px;
+  height: 20px;
+  fill: var(--ai-primary-color);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.ai-assistant-mic-icon:hover {
+  transform: scale(1.1);
+}
+
+.ai-assistant-input {
+  flex: 1;
+  height: 32px;
+  border: none;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  padding: 0 10px;
+  font-size: 14px;
+  color: var(--ai-text-color);
+  outline: none;
+}
+
+.ai-assistant-input::placeholder {
+  color: #999;
+}
+
+/* 快捷问句区 */
+.ai-assistant-quick-questions {
+  height: 30px;
+  padding: 0 8px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.ai-assistant-quick-question {
+  min-width: 80px;
+  height: 24px;
+  padding: 0 8px;
+  background: rgba(53, 119, 240, 0.1);
+  color: var(--ai-primary-color);
+  border-radius: 12px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s ease;
+}
+
+.ai-assistant-quick-question:hover {
+  background: rgba(53, 119, 240, 0.2);
+}
+
+/* 答案区 */
+.ai-assistant-answer-area {
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+  font-size: 14px;
+  color: var(--ai-text-color);
+  line-height: 1.5;
+}
+
+.ai-assistant-answer-text {
+  margin-bottom: 8px;
+}
+
+.ai-assistant-answer-text strong {
+  color: var(--ai-primary-color);
+}
+
+/* 功能按钮区 */
+.ai-assistant-actions {
+  height: 36px;
+  padding: 0 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ai-assistant-action-btn {
+  width: 100px;
+  height: 28px;
+  background: var(--ai-primary-color);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.ai-assistant-action-btn:hover {
+  background: var(--ai-secondary-color);
+}
+
+/* 加载动画 */
+.ai-assistant-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #999;
+  font-size: 12px;
+}
+
+.ai-assistant-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(0, 0, 0, 0.1);
+  border-top-color: var(--ai-primary-color);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* 关闭按钮 */
+.ai-assistant-close {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.ai-assistant-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.ai-assistant-close-icon {
+  width: 12px;
+  height: 12px;
+  fill: #666;
+}
+
+/* 响应式适配 */
+@media (max-width: 375px) {
+  .ai-assistant-bar {
+    width: 10px;
+  }
+
+  .ai-assistant-window {
+    width: 220px;
+  }
+
+  .ai-assistant-quick-question {
+    min-width: 70px;
+  }
+
+  .ai-assistant-action-btn {
+    width: 90px;
+  }
+}
+
+/* 暗夜模式适配 */
+.dark-theme .ai-assistant-window {
+  background: rgba(36, 36, 62, 0.9);
+  color: #e0e0e0;
+}
+
+.dark-theme .ai-assistant-input {
+  background: rgba(255, 255, 255, 0.05);
+  color: #e0e0e0;
+}
+
+.dark-theme .ai-assistant-answer-area {
+  color: #e0e0e0;
+}
+
+.dark-theme .ai-assistant-close-icon {
+  fill: #b0b0b0;
+}
