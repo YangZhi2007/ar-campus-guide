@@ -594,19 +594,7 @@
         }, 2000);
       });
 
-      // 初始化AI智能问答助手
-      document.addEventListener("DOMContentLoaded", function() {
-        window.aiAssistant = new AIAssistant({
-          barWidth: 28,
-          barHeight: 80,
-          barCollapsedHeight: 20,
-          barMargin: 4,
-          windowWidth: 260,
-          windowMinHeight: 120,
-          windowMaxHeight: 220,
-          autoHideDelay: 10000
-        });
-      });
+      // AI智能问答助手现在是全局单例，会自动初始化
     </script>
     
     <!-- AI智能问答助手组件 -->

@@ -19,16 +19,21 @@ class AIAssistant {
       ...options
     };
 
-    // 状态管理
+    // 状态管理 - 从localStorage恢复或使用默认值
+    const savedState = this.loadState();
     this.state = {
-      isExpanded: false,
+      isExpanded: savedState?.isExpanded || false,
       isDragging: false,
       isListening: false,
-      position: 'right', // 'left' 或 'right'
+      position: savedState?.position || 'right', // 'left' 或 'right'
       lastActivity: Date.now(),
       scrollDirection: 'none',
       lastScrollY: 0,
-      barCollapsed: false
+      barCollapsed: savedState?.barCollapsed || false,
+      // 保存聊天历史
+      chatHistory: savedState?.chatHistory || [],
+      // 保存窗口位置
+      windowPosition: savedState?.windowPosition || null
     };
 
     // DOM元素引用
@@ -39,6 +44,64 @@ class AIAssistant {
   }
 
   /**
+   * 从localStorage加载状态
+   */
+  loadState() {
+    try {
+      const stateStr = localStorage.getItem('aiAssistantState');
+      if (stateStr) {
+        return JSON.parse(stateStr);
+      }
+    } catch (error) {
+      console.error('Failed to load AI assistant state:', error);
+    }
+    return null;
+  }
+
+  /**
+   * 保存状态到localStorage
+   */
+  saveState() {
+    try {
+      const stateToSave = {
+        isExpanded: this.state.isExpanded,
+        position: this.state.position,
+        barCollapsed: this.state.barCollapsed,
+        chatHistory: this.state.chatHistory,
+        windowPosition: this.state.windowPosition
+      };
+      localStorage.setItem('aiAssistantState', JSON.stringify(stateToSave));
+    } catch (error) {
+      console.error('Failed to save AI assistant state:', error);
+    }
+  }
+
+  /**
+   * 恢复聊天历史记录
+   */
+  restoreChatHistory() {
+    if (!this.state.chatHistory || this.state.chatHistory.length === 0) {
+      return;
+    }
+    
+    // 显示最近的对话
+    const recentHistory = this.state.chatHistory.slice(-10); // 只显示最近10条
+    let historyHTML = '';
+    
+    recentHistory.forEach(item => {
+      if (item.type === 'question') {
+        historyHTML += `<div class="ai-assistant-question">${item.content}</div>`;
+      } else if (item.type === 'answer') {
+        historyHTML += `<div class="ai-assistant-answer-text">${item.content}</div>`;
+      }
+    });
+    
+    if (historyHTML) {
+      this.elements.answerArea.innerHTML = historyHTML;
+    }
+  }
+
+  /**
    * 初始化组件
    */
   init() {
@@ -46,6 +109,14 @@ class AIAssistant {
     this.attachEventListeners();
     this.startAutoHideTimer();
     this.updateBarPosition();
+    
+    // 恢复聊天历史记录
+    this.restoreChatHistory();
+    
+    // 如果之前是展开状态，则恢复展开状态
+    if (this.state.isExpanded) {
+      this.showWindow();
+    }
   }
 
   /**
@@ -286,6 +357,7 @@ class AIAssistant {
     const centerX = position.x + this.config.barWidth / 2;
     const shouldSnapRight = centerX > screenWidth / 2;
     this.state.position = shouldSnapRight ? 'right' : 'left';
+    this.saveState();
 
     // 设置竖条位置
  
@@ -338,6 +410,7 @@ class AIAssistant {
     const centerX = position.x + windowWidth / 2;
     const shouldSnapRight = centerX > screenWidth / 2;
     this.state.position = shouldSnapRight ? 'right' : 'left';
+    this.saveState();
 
     // 设置窗口位置
     if (shouldSnapRight) {
@@ -382,6 +455,7 @@ class AIAssistant {
     this.elements.window.classList.add('show');
     this.updateWindowPosition();
     this.updateActivity();
+    this.saveState();
   }
 
   /**
@@ -390,6 +464,7 @@ class AIAssistant {
   hideWindow() {
     this.state.isExpanded = false;
     this.elements.window.classList.remove('show');
+    this.saveState();
   }
 
   /**
@@ -397,6 +472,14 @@ class AIAssistant {
    */
   submitQuestion(question) {
     if (!question || question.trim() === '') return;
+
+    // 保存问题到聊天历史
+    this.state.chatHistory.push({
+      type: 'question',
+      content: question,
+      timestamp: Date.now()
+    });
+    this.saveState();
 
     // 清空输入框
     this.elements.input.value = '';
@@ -435,6 +518,19 @@ class AIAssistant {
    * 显示答案
    */
   showAnswer(answer) {
+    // 保存到聊天历史
+    this.state.chatHistory.push({
+      type: 'answer',
+      content: answer,
+      timestamp: Date.now()
+    });
+    // 限制历史记录数量，最多保存20条
+    if (this.state.chatHistory.length > 20) {
+      this.state.chatHistory = this.state.chatHistory.slice(-20);
+    }
+    this.saveState();
+    
+    // 显示最新的回答
     this.elements.answerArea.innerHTML = `<div class="ai-assistant-answer-text">${answer}</div>`;
     this.updateActivity();
 
@@ -609,4 +705,31 @@ class AIAssistant {
 // 导出组件类
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = AIAssistant;
+}
+
+// 单例模式实现
+let aiAssistantInstance = null;
+
+/**
+ * 获取AI助手单例实例
+ * @param {Object} options - 配置参数
+ * @returns {AIAssistant} AI助手实例
+ */
+function getAIAssistant(options = {}) {
+  if (!aiAssistantInstance) {
+    aiAssistantInstance = new AIAssistant(options);
+  }
+  return aiAssistantInstance;
+}
+
+// 将获取单例的函数挂载到window对象上
+if (typeof window !== 'undefined') {
+  window.getAIAssistant = getAIAssistant;
+  
+  // 自动初始化（如果尚未初始化）
+  document.addEventListener('DOMContentLoaded', function() {
+    if (!aiAssistantInstance) {
+      window.aiAssistant = getAIAssistant();
+    }
+  });
 }

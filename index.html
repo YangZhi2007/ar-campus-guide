@@ -488,25 +488,9 @@
     <script src="./js/search.js"></script>
     <script src="./js/navigation.js"></script>
     <script src="./js/footer.js"></script>
-    <!-- AI智能问答助手组件 -->
+    <!-- AI智能问答助手组件（全局单例） -->
     <link rel="stylesheet" href="./css/ai-assistant.css">
     <script src="./js/ai-assistant.js"></script>
-    <script>
-        // 初始化AI智能问答助手
-        document.addEventListener('DOMContentLoaded', function() {
-            window.aiAssistant = new AIAssistant({
-                // 可选配置参数
-                barWidth: 10,           // 竖条宽度
-                barHeight: 80,          // 竖条高度
-                barCollapsedHeight: 20, // 折叠时竖条高度
-                barMargin: 4,           // 竖条距离边缘的距离
-                windowWidth: 260,       // 窗口宽度
-                windowMinHeight: 120,  // 窗口最小高度
-                windowMaxHeight: 220,  // 窗口最大高度
-                autoHideDelay: 10000   // 无操作自动隐藏延迟（毫秒）
-            });
-        });
-    </script>
     <script>
         // 搜索栏交互
         const searchInput = document.getElementById('searchInput');

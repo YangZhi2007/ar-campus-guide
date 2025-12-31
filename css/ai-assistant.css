@@ -293,3 +293,32 @@
 .dark-theme .ai-assistant-close-icon {
   fill: #b0b0b0;
 }
+
+/* 聊天历史记录样式 */
+.ai-assistant-question {
+  background: rgba(53, 119, 240, 0.1);
+  color: var(--ai-primary-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 8px 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ai-assistant-answer-text {
+  color: var(--ai-text-color);
+  padding: 8px 12px;
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* 暗夜模式下的聊天历史 */
+.dark-theme .ai-assistant-question {
+  background: rgba(90, 145, 245, 0.2);
+  color: #5A91F5;
+}
+
+.dark-theme .ai-assistant-answer-text {
+  color: #e0e0e0;
+}
